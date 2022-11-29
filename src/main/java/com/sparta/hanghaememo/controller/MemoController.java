@@ -1,5 +1,6 @@
 package com.sparta.hanghaememo.controller;
 
+import com.sparta.hanghaememo.dto.DelResponseDto;
 import com.sparta.hanghaememo.dto.MemoRequestDto;
 import com.sparta.hanghaememo.dto.MemoResponseDto;
 import com.sparta.hanghaememo.entity.Memo;
@@ -44,7 +45,7 @@ public class MemoController {
         return memoService.update(id,requestDto);
     }
     @DeleteMapping("/api/delete/{id}")
-    public  Long deleteMemo(@PathVariable Long id,@RequestBody MemoRequestDto requestDto){
+    public DelResponseDto deleteMemo(@PathVariable Long id, @RequestBody MemoRequestDto requestDto){
         return memoService.deleteMemo(id,requestDto);
     }
 

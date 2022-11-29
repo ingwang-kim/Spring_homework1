@@ -1,5 +1,6 @@
 package com.sparta.hanghaememo.service;
 
+import com.sparta.hanghaememo.dto.DelResponseDto;
 import com.sparta.hanghaememo.dto.MemoRequestDto;
 import com.sparta.hanghaememo.dto.MemoResponseDto;
 import com.sparta.hanghaememo.entity.Memo;
@@ -51,14 +52,17 @@ public class MemoService {
     }
 
     @Transactional
-    public Long deleteMemo(Long id, MemoRequestDto requestDto) {
+    public DelResponseDto deleteMemo(Long id, MemoRequestDto requestDto) {
         Memo memo = getMemo(id, "존재하지 않습니다");
+        DelResponseDto delResponseDto;
         if(memo.getPw().equals(requestDto.getPw())){
             memoRepository.deleteById(id);
-            return id;
+            delResponseDto = new DelResponseDto(true);
+            return delResponseDto;
         }
         else {
-            return id*0;
+            delResponseDto = new DelResponseDto(false);
+            return delResponseDto ;
         }
 
     }
