@@ -3,6 +3,7 @@ package com.sparta.hanghaememo.controller;
 import com.sparta.hanghaememo.dto.DelResponseDto;
 import com.sparta.hanghaememo.dto.MemoRequestDto;
 import com.sparta.hanghaememo.dto.MemoResponseDto;
+import com.sparta.hanghaememo.dto.UpdateResponseDto;
 import com.sparta.hanghaememo.entity.Memo;
 import com.sparta.hanghaememo.service.MemoService;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +42,7 @@ public class MemoController {
     }
 
     @PutMapping("/api/update/{id}")
-    public Memo updateMemo(@PathVariable Long id,@RequestBody MemoRequestDto requestDto){
+    public UpdateResponseDto updateMemo(@PathVariable Long id, @RequestBody MemoRequestDto requestDto){
         return memoService.update(id,requestDto);
     }
     @DeleteMapping("/api/delete/{id}")

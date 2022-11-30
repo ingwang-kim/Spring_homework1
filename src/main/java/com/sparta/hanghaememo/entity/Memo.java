@@ -38,13 +38,15 @@ public class Memo extends Timestamped {
         this.title = requestDto.getTitle();
         this.id = getId();
     }
-
     public void update(MemoRequestDto memoRequestDto) {
+
+        this.title = memoRequestDto.getTitle();
         this.username = memoRequestDto.getUsername();
         this.contents = memoRequestDto.getContents();
         this.pw = memoRequestDto.getPw();
-        this.title = memoRequestDto.getTitle();
+
     }
+
 
 
 }

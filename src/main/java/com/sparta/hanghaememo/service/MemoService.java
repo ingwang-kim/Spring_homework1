@@ -3,6 +3,7 @@ package com.sparta.hanghaememo.service;
 import com.sparta.hanghaememo.dto.DelResponseDto;
 import com.sparta.hanghaememo.dto.MemoRequestDto;
 import com.sparta.hanghaememo.dto.MemoResponseDto;
+import com.sparta.hanghaememo.dto.UpdateResponseDto;
 import com.sparta.hanghaememo.entity.Memo;
 import com.sparta.hanghaememo.repository.MemoRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,19 +39,18 @@ public class MemoService {
         return memoResponseDto;
 
     }
-
+    //update
     @Transactional
-    public Memo update(Long id, MemoRequestDto requestDto) {
+    public UpdateResponseDto update(Long id, MemoRequestDto requestDto) {
         //메모가 있는지 확인
         Memo memo = getMemo(id, "아이디가 존재하지 않습니다");
-        if(memo.getPw().equals(requestDto.getPw())) {// 비밀번호 일치시 변경
+        if(requestDto.getPw().equals(memo.getPw())) {// 비밀번호 일치시 변경
             memo.update(requestDto);
-            return memo;
-        }else {
-            return memo; //비밀번호 불일치시 그대로 출력
         }
+        return new UpdateResponseDto(memo);
     }
 
+    //delete
     @Transactional
     public DelResponseDto deleteMemo(Long id, MemoRequestDto requestDto) {
         Memo memo = getMemo(id, "존재하지 않습니다");
@@ -67,6 +67,7 @@ public class MemoService {
 
     }
 
+    // memo값이 null값인지 확인하는 메소드
     private Memo getMemo(Long id, String 존재하지_않습니다) {
         Memo memo=memoRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException()

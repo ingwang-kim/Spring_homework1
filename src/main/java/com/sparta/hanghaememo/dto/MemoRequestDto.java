@@ -2,6 +2,8 @@ package com.sparta.hanghaememo.dto;
 
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 @Getter
 public class MemoRequestDto {
     private String username;
@@ -9,4 +11,6 @@ public class MemoRequestDto {
     private String pw;
     private String title;
     private Long id;
+    private LocalDateTime createdAt;
+    private LocalDateTime modifiedAt;
 }
