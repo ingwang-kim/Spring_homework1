@@ -7,7 +7,6 @@ import com.sparta.hanghaememo.dto.UpdateResponseDto;
 import com.sparta.hanghaememo.service.MemoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -18,11 +17,6 @@ public class MemoController {
 
 
     private final MemoService memoService;
-
-    @GetMapping("/")
-    public ModelAndView home() {
-        return new ModelAndView("index");
-    }
 
     @PostMapping("/api/memos")
     public MemoResponseDto createMemo(@RequestBody MemoRequestDto requestDto){

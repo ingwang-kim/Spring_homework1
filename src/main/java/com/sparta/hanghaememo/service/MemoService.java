@@ -31,6 +31,17 @@ public class MemoService {
         List<Memo> memo = memoRepository.findAllByOrderByModifiedAtDesc();
         return memo.stream().map(memo1 ->new MemoResponseDto(memo1)).collect(Collectors.toList());
     }
+     //리스트 형식으로 출력
+    /*@Transactional
+    public List<MemoResponseDto> getMemos() {
+        List<Memo> memoList = memoRepository.findAllByOrderByModifiedAtDesc();
+        List<MemoResponseDto> memoResponseDto = new ArrayList<>();
+        for(Memo memo : memoList){
+            MemoResponseDto memoDto = new MemoResponseDto(memo);
+            memoResponseDto.add(memoDto);
+        }
+        return memoResponseDto;
+    }*/
 
     //아이디 리스트 중 하나 출력
     @Transactional
