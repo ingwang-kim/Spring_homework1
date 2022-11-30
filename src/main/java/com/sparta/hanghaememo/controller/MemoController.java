@@ -4,7 +4,6 @@ import com.sparta.hanghaememo.dto.DelResponseDto;
 import com.sparta.hanghaememo.dto.MemoRequestDto;
 import com.sparta.hanghaememo.dto.MemoResponseDto;
 import com.sparta.hanghaememo.dto.UpdateResponseDto;
-import com.sparta.hanghaememo.entity.Memo;
 import com.sparta.hanghaememo.service.MemoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +25,7 @@ public class MemoController {
     }
 
     @PostMapping("/api/memos")
-    public Memo createMemo(@RequestBody MemoRequestDto requestDto){
+    public MemoResponseDto createMemo(@RequestBody MemoRequestDto requestDto){
         return memoService.createMemo(requestDto);
     }
 

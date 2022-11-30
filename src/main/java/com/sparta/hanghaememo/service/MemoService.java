@@ -19,10 +19,11 @@ public class MemoService {
     public final MemoRepository memoRepository;
 
     @Transactional
-    public Memo createMemo(MemoRequestDto requestDto) {
+    public MemoResponseDto createMemo(MemoRequestDto requestDto) {
         Memo memo = new Memo(requestDto);
         memoRepository.save(memo);
-        return memo;
+        MemoResponseDto memoResponseDto = new MemoResponseDto(memo);
+        return memoResponseDto;
     }
 
     @Transactional
