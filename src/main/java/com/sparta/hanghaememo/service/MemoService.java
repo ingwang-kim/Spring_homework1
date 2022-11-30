@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,10 +26,10 @@ public class MemoService {
     }
 
     @Transactional
-    public List<Memo> getMemos() {
-        return memoRepository.findAllByOrderByModifiedAtDesc();
+    public List<MemoResponseDto> getMemos() {
+        List<Memo> memo = memoRepository.findAllByOrderByModifiedAtDesc();
+        return memo.stream().map(memo1 ->new MemoResponseDto(memo1)).collect(Collectors.toList());
     }
-
 
     //아이디 리스트 중 하나 출력
     @Transactional

@@ -31,7 +31,7 @@ public class MemoController {
     }
 
     @GetMapping("/api/memos")
-    public List<Memo> getMemos(){
+    public List<MemoResponseDto> getMemos(){
         return memoService.getMemos();
     }
 
