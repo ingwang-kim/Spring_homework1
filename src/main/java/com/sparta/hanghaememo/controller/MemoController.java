@@ -28,17 +28,17 @@ public class MemoController {
         return memoService.getMemos();
     }
 
-    @GetMapping("/api/open/{id}")
+    @GetMapping("/api/memos/{id}")
     public MemoResponseDto openMemo(@PathVariable Long id){
         return memoService.openMemo(id);
 
     }
 
-    @PutMapping("/api/update/{id}")
+    @PutMapping("/api/memos/{id}")
     public UpdateResponseDto updateMemo(@PathVariable Long id, @RequestBody MemoRequestDto requestDto){
         return memoService.update(id,requestDto);
     }
-    @DeleteMapping("/api/delete/{id}")
+    @DeleteMapping("/api/memos/{id}")
     public DelResponseDto deleteMemo(@PathVariable Long id, @RequestBody MemoRequestDto requestDto){
         return memoService.deleteMemo(id,requestDto);
     }
