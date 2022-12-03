@@ -5,6 +5,7 @@ import com.sparta.hanghaememo.dto.MemoRequestDto;
 import com.sparta.hanghaememo.dto.MemoResponseDto;
 import com.sparta.hanghaememo.dto.UpdateResponseDto;
 import com.sparta.hanghaememo.entity.Memo;
+import com.sparta.hanghaememo.entity.User;
 import com.sparta.hanghaememo.jwt.JwtUtil;
 import com.sparta.hanghaememo.repository.MemoRepository;
 import com.sparta.hanghaememo.repository.UserRepository;
@@ -33,7 +34,7 @@ public class MemoService {
         String token = jwtUtil.resolveToken(request);
         Claims claims;
 
-        /*if (token != null) {
+        if (token != null) {
             if (jwtUtil.validateToken(token)) {
                 // 토큰에서 사용자 정보 가져오기
                 claims = jwtUtil.getUserInfoFromToken(token);
@@ -44,13 +45,10 @@ public class MemoService {
             // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
             User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
                     () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
-            );*/
-            if (token != null) {
-                Memo memo = new Memo(requestDto);
-                memoRepository.save(memo);
-                MemoResponseDto memoResponseDto = new MemoResponseDto(memo);
+            );
+                Memo memo = memoRepository.save(new Memo(requestDto,user.getId()));
 
-                return memoResponseDto;
+                return new MemoResponseDto(memo);
             } else {
                 return null;
             }
@@ -68,6 +66,40 @@ public class MemoService {
     //아이디 리스트 중 하나 출력
     //리스트 형식으로 출력
     @Transactional
+    public List<MemoResponseDto> getMemos(HttpServletRequest request) {
+
+        String token = jwtUtil.resolveToken(request);
+        Claims claims;
+
+        // 토큰이 있는 경우에만 출력
+        if (token != null) {
+            if (jwtUtil.validateToken(token)) {
+                // 토큰에서 사용자 정보 가져오기
+                claims = jwtUtil.getUserInfoFromToken(token);
+            } else {
+                throw new IllegalArgumentException("Token Error");
+            }
+
+            // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
+            User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
+                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+            );
+
+            // 요청받은 DTO 로 DB에 저장할 객체 만들기
+            List<MemoResponseDto> list =new ArrayList<>();
+            List<Memo> memoList;
+            memoList =memoRepository.findAllByUserId(user.getId());
+
+            for(Memo memo : memoList){
+                list.add(new MemoResponseDto(memo));
+            }
+
+            return list;
+        }else {
+            return null;
+        }
+    }
+   /* @Transactional
     public List<MemoResponseDto> getMemos() {
         List<Memo> memoList = memoRepository.findAllByOrderByModifiedAtDesc();
         List<MemoResponseDto> memoResponseDto = new ArrayList<>();
@@ -76,7 +108,7 @@ public class MemoService {
             memoResponseDto.add(memoDto);
         }
         return memoResponseDto;
-    }
+    }*/
 
     //아이디 리스트 중 하나 출력
     @Transactional

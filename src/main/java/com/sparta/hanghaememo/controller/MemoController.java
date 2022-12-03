@@ -26,8 +26,8 @@ public class MemoController {
     }
     //모든 데이터 뽑아오기
     @GetMapping("/api/memos")
-    public List<MemoResponseDto> getMemos(){
-        return memoService.getMemos();
+    public List<MemoResponseDto> getMemos(HttpServletRequest request){
+        return memoService.getMemos(request);
     }
 
     //아이디별 하나의 자료뽑아오기
