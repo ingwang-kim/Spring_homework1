@@ -31,22 +31,22 @@ public class MemoController {
     }
 
     //아이디별 하나의 자료뽑아오기
-    @GetMapping("/api/memos/{id}")
+    @GetMapping("/api/open/{id}")
     public MemoResponseDto openMemo(@PathVariable Long id){
         return memoService.openMemo(id);
 
     }
 
     //아이디가 일치하는 데이터 업데이트
-    @PutMapping("/api/memos/{id}")
-    public UpdateResponseDto updateMemo(@PathVariable Long id, @RequestBody MemoRequestDto requestDto){
-        return memoService.update(id,requestDto);
+    @PutMapping("/api/update/{id}")
+    public UpdateResponseDto updateMemo(@PathVariable Long id, @RequestBody MemoRequestDto requestDto ,HttpServletRequest request){
+        return memoService.update(id,requestDto,request);
     }
 
     //아이디가 일치하는 데이터 삭제
-    @DeleteMapping("/api/memos/{id}")
-    public DelResponseDto deleteMemo(@PathVariable Long id, @RequestBody MemoRequestDto requestDto){
-        return memoService.deleteMemo(id,requestDto);
+    @DeleteMapping("/api/delete/{id}")
+    public DelResponseDto deleteMemo(@PathVariable Long id, @RequestBody MemoRequestDto requestDto,HttpServletRequest request){
+        return memoService.deleteMemo(id,requestDto,request);
     }
 
 }

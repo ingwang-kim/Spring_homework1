@@ -95,8 +95,11 @@ public class MemoService {
             }
 
             return list;
+
         }else {
+
             return null;
+
         }
     }
    /* @Transactional
@@ -112,39 +115,79 @@ public class MemoService {
 
     //아이디 리스트 중 하나 출력
     @Transactional
-    public MemoResponseDto openMemo(Long id){
-        Memo memo = getMemo(id, "아이디가 존재하지 않습니다");
-        MemoResponseDto memoResponseDto = new MemoResponseDto(memo);
+    public MemoResponseDto openMemo(Long id) {
 
-        return memoResponseDto;
+            Memo memo = getMemo(id, "아이디가 존재하지 않습니다");
+            MemoResponseDto memoResponseDto = new MemoResponseDto(memo);
 
+            return memoResponseDto;
     }
 
 
     //update
     @Transactional
-    public UpdateResponseDto update(Long id, MemoRequestDto requestDto) {
-        //메모가 있는지 확인
-        Memo memo = getMemo(id, "아이디가 존재하지 않습니다");
-        if(requestDto.getPw().equals(memo.getPw())) {// 비밀번호 일치시 변경
+    public UpdateResponseDto update(Long id, MemoRequestDto requestDto, HttpServletRequest request) {
+        String token = jwtUtil.resolveToken(request);
+        Claims claims;
+
+        // 토큰이 있는 경우에만 관심상품 조회 가능
+        if (token != null) {
+            // Token 검증
+            if (jwtUtil.validateToken(token)) {
+                // 토큰에서 사용자 정보 가져오기
+                claims = jwtUtil.getUserInfoFromToken(token);
+            } else {
+                throw new IllegalArgumentException("Token Error");
+            }
+
+            // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
+            User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
+                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+            );
+
+
+            Memo memo = memoRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
+                    () -> new NullPointerException("아이디가 일치하지 않습니다.")
+            );
+
             memo.update(requestDto);
+
+
+            return new UpdateResponseDto(memo);
+        }else {
+            return null;
         }
-        return new UpdateResponseDto(memo);
     }
 
     //delete
     @Transactional
-    public DelResponseDto deleteMemo(Long id, MemoRequestDto requestDto) {
-        Memo memo = getMemo(id, "존재하지 않습니다");
-        DelResponseDto delResponseDto;
-        if(memo.getPw().equals(requestDto.getPw())){
+    public DelResponseDto deleteMemo(Long id, MemoRequestDto requestDto,HttpServletRequest request) {
+        String token = jwtUtil.resolveToken(request);
+        Claims claims;
+
+        // 토큰이 있는 경우에만 관심상품 조회 가능
+        if (token != null) {
+            // Token 검증
+            if (jwtUtil.validateToken(token)) {
+                // 토큰에서 사용자 정보 가져오기
+                claims = jwtUtil.getUserInfoFromToken(token);
+            } else {
+                throw new IllegalArgumentException("Token Error");
+            }
+
+            // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
+            User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
+                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+            );
+
+
             memoRepository.deleteById(id);
-            delResponseDto = new DelResponseDto(true);
-            return delResponseDto;
-        }
-        else {
-            delResponseDto = new DelResponseDto(false);
-            return delResponseDto ;
+
+            return new DelResponseDto(true);
+
+
+        }else {
+            return new DelResponseDto(false);
         }
 
     }
