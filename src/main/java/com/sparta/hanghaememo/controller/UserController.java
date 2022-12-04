@@ -5,6 +5,7 @@ import com.sparta.hanghaememo.dto.ResponseMsgDto;
 import com.sparta.hanghaememo.dto.SignupRequestDto;
 import com.sparta.hanghaememo.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,7 +27,7 @@ public class UserController {
     public ResponseEntity<ResponseMsgDto> signup(@RequestBody SignupRequestDto signupRequestDto) {
         userService.signup(signupRequestDto);
        /* return ResponseEntity.ok(signupRequestDto);*/
-        return ResponseEntity.ok(new ResponseMsgDto("가입 완료"));
+        return ResponseEntity.ok(new ResponseMsgDto(HttpStatus.OK,"가입완료"));
     }
     // 로그인
     //form태그로 넘어왔기 때문에 ModelAttribute형식으로 받아와 @RequestBody 필요x
@@ -41,6 +42,6 @@ public class UserController {
     public ResponseEntity<ResponseMsgDto> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {//클라이언트에 반환하기 위해 response객체
         userService.login(loginRequestDto, response);
 
-        return ResponseEntity.ok(new ResponseMsgDto("로그인 성공"));
+        return ResponseEntity.ok(new ResponseMsgDto(HttpStatus.OK,"로그인 성공"));
     }
 }

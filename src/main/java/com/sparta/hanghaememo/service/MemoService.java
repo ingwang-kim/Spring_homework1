@@ -145,13 +145,11 @@ public class MemoService {
                     () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
             );
 
-
             Memo memo = memoRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
                     () -> new NullPointerException("아이디가 일치하지 않습니다.")
             );
 
             memo.update(requestDto);
-
 
             return new UpdateResponseDto(memo);
         }else {
