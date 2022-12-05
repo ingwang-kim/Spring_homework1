@@ -1,9 +1,6 @@
 package com.sparta.hanghaememo.service;
 
-import com.sparta.hanghaememo.dto.DelResponseDto;
-import com.sparta.hanghaememo.dto.MemoRequestDto;
-import com.sparta.hanghaememo.dto.MemoResponseDto;
-import com.sparta.hanghaememo.dto.UpdateResponseDto;
+import com.sparta.hanghaememo.dto.*;
 import com.sparta.hanghaememo.entity.Memo;
 import com.sparta.hanghaememo.entity.User;
 import com.sparta.hanghaememo.entity.UserRoleEnum;
@@ -171,7 +168,7 @@ public class MemoService {
 
     //delete
     @Transactional
-    public DelResponseDto deleteMemo(Long id,HttpServletRequest request) {
+    public void deleteMemo(Long id,HttpServletRequest request) {
         String token = jwtUtil.resolveToken(request);
         Claims claims;
 
@@ -191,10 +188,9 @@ public class MemoService {
             );
 
             Memo memo;
-            if(user.getRole().equals(UserRoleEnum.ADMIN)) {
+            if (user.getRole().equals(UserRoleEnum.ADMIN)) {
                 memo = memoRepository.findById(id).orElseThrow(NullPointerException::new);
-            }
-            else {
+            } else {
                 memo = memoRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
                         () -> new NullPointerException("아이디가 일치하지 않습니다.")
                 );
@@ -202,11 +198,6 @@ public class MemoService {
 
             memoRepository.delete(memo);
 
-            return new DelResponseDto(true);
-
-
-        }else {
-            return new DelResponseDto(false);
         }
 
     }
@@ -219,10 +210,38 @@ public class MemoService {
         return memo;
     }
 
-   /* public CommentDto postComment(Long id, MemoRequestDto requestDto, HttpServletRequest request) {
+    /*public CommentDto postComment(Long id, MemoRequestDto requestDto, HttpServletRequest request) {
 
 
+        String token = jwtUtil.resolveToken(request);
+        Claims claims;
 
+        *//*if(UserRoleEnum.ADMIN.equals(jwtUtil.validateToken(role))){
+
+        }*//*
+        *//*System.out.println(jwtUtil.validateToken(role));*//*
+
+
+        if (token != null) {
+
+            if (jwtUtil.validateToken(token)) {
+                // 토큰에서 사용자 정보 가져오기
+                claims = jwtUtil.getUserInfoFromToken(token);
+            } else {
+                throw new IllegalArgumentException("Token Error");
+            }
+
+
+            // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
+            User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
+                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+            );
+            Memo memo = memoRepository.save(new Memo(requestDto, user.getId()));
+            return new MemoResponseDto(memo);
+
+        } else {
+            return null;
+        }
 
     }*/
 }

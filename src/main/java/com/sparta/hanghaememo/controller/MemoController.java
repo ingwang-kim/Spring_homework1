@@ -3,6 +3,7 @@ package com.sparta.hanghaememo.controller;
 import com.sparta.hanghaememo.dto.*;
 import com.sparta.hanghaememo.service.MemoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,11 +43,11 @@ public class MemoController {
 
     //아이디가 일치하는 데이터 삭제
     @DeleteMapping("/api/delete/{id}")
-    public DelResponseDto deleteMemo(@PathVariable Long id, HttpServletRequest request){
-        return memoService.deleteMemo(id,request);
+    public ResponseMsgDto deleteMemo(@PathVariable Long id, HttpServletRequest request){
+        return new ResponseMsgDto(HttpStatus.OK.value(), "삭제 완료");
     }
 
-   /* @PostMapping("/api/comment/{id}")
+  /*  @PostMapping("/api/comment/{id}")
     public CommentDto postComment(@PathVariable Long id,@RequestBody MemoRequestDto requestDto, HttpServletRequest request){
         return memoService.postComment(id,requestDto,request);
     }*/
