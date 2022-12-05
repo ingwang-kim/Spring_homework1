@@ -53,7 +53,8 @@ public class MemoService {
             User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
                     () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
             );
-            Memo memo = memoRepository.save(new Memo(requestDto, user.getId()));
+
+            Memo memo = memoRepository.save(new Memo(requestDto, user.getId(),user.getUsername()));
             return new MemoResponseDto(memo);
 
         } else {
@@ -233,10 +234,8 @@ public class MemoService {
                     () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
             );
 
-            user.getId()
-
-            Memo memo = memoRepository.save(new Memo(requestDto, user.getId()));
-            return new CommentResponseDto(memo);
+            Comment comment = CommentRepository.save(new Memo(requestDto, user.getId()));
+            return new CommentResponseDto(comment;
 
         } else {
             return null;

@@ -22,8 +22,6 @@ public class Comment extends Timestamped {
     private Long userId;
 
 
-
-
     public Comment(MemoRequestDto requestDto , Long id) {
         this.username = requestDto.getUsername();
         this.title = requestDto.getTitle();

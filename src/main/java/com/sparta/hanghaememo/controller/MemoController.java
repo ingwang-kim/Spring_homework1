@@ -49,7 +49,7 @@ public class MemoController {
         return ResponseEntity.ok(new ResponseMsgDto(HttpStatus.OK.value(), "삭제 완료"));
     }
 
-    /*@PostMapping("/api/comment/{id}")
+/*    @PostMapping("/api/comment/{id}")
     public CommentResponseDto postComment(@PathVariable Long id, @RequestBody MemoRequestDto requestDto, HttpServletRequest request){
         return memoService.postComment(id,requestDto,request);
     }*/
