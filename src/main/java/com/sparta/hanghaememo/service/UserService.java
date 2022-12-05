@@ -30,6 +30,7 @@ public class UserService {
 
     private final JwtUtil jwtUtil; // jwtUtil 사용을 위해 의존성 주입
 
+    //회원가입
     @Transactional
     public void signup(SignupRequestDto signupRequestDto) {
         String username = signupRequestDto.getUsername();
@@ -72,6 +73,7 @@ public class UserService {
          }
      }
  */
+    //로그인
     @Transactional(readOnly = true)
     public void login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
         String username = loginRequestDto.getUsername();

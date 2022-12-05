@@ -6,6 +6,7 @@ import com.sparta.hanghaememo.dto.MemoResponseDto;
 import com.sparta.hanghaememo.dto.UpdateResponseDto;
 import com.sparta.hanghaememo.entity.Memo;
 import com.sparta.hanghaememo.entity.User;
+import com.sparta.hanghaememo.entity.UserRoleEnum;
 import com.sparta.hanghaememo.jwt.JwtUtil;
 import com.sparta.hanghaememo.repository.MemoRepository;
 import com.sparta.hanghaememo.repository.UserRepository;
@@ -30,11 +31,18 @@ public class MemoService {
     //데이터 생성
     @Transactional
     public MemoResponseDto createMemo(MemoRequestDto requestDto , HttpServletRequest request) {
-
         String token = jwtUtil.resolveToken(request);
         Claims claims;
+        System.out.println(token);
+
+        /*if(UserRoleEnum.ADMIN.equals(jwtUtil.validateToken(role))){
+
+        }*/
+        /*System.out.println(jwtUtil.validateToken(role));*/
+
 
         if (token != null) {
+
             if (jwtUtil.validateToken(token)) {
                 // 토큰에서 사용자 정보 가져오기
                 claims = jwtUtil.getUserInfoFromToken(token);
@@ -42,16 +50,17 @@ public class MemoService {
                 throw new IllegalArgumentException("Token Error");
             }
 
+
             // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
             User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
                     () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
             );
-                Memo memo = memoRepository.save(new Memo(requestDto,user.getId()));
+            Memo memo = memoRepository.save(new Memo(requestDto, user.getId()));
+            return new MemoResponseDto(memo);
 
-                return new MemoResponseDto(memo);
-            } else {
-                return null;
-            }
+        } else {
+            return null;
+        }
     }
 
 
@@ -84,12 +93,16 @@ public class MemoService {
             User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
                     () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
             );
-
-            // 요청받은 DTO 로 DB에 저장할 객체 만들기
             List<MemoResponseDto> list =new ArrayList<>();
             List<Memo> memoList;
-            memoList =memoRepository.findAllByUserId(user.getId());
+            if(user.getRole().equals(UserRoleEnum.ADMIN)){
 
+                memoList =memoRepository.findAllByOrderByModifiedAtDesc();
+
+            }else {
+                // 요청받은 DTO 로 DB에 저장할 객체 만들기
+                memoList = memoRepository.findAllByUserId(user.getId());
+            }
             for(Memo memo : memoList){
                 list.add(new MemoResponseDto(memo));
             }

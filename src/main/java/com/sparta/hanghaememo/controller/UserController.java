@@ -27,7 +27,7 @@ public class UserController {
     public ResponseEntity<ResponseMsgDto> signup(@RequestBody SignupRequestDto signupRequestDto) {
         userService.signup(signupRequestDto);
        /* return ResponseEntity.ok(signupRequestDto);*/
-        return ResponseEntity.ok(new ResponseMsgDto(HttpStatus.OK,"가입완료"));
+        return ResponseEntity.ok(new ResponseMsgDto(HttpStatus.OK.value(),"가입완료"));
     }
     // 로그인
     //form태그로 넘어왔기 때문에 ModelAttribute형식으로 받아와 @RequestBody 필요x
@@ -42,6 +42,6 @@ public class UserController {
     public ResponseEntity<ResponseMsgDto> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {//클라이언트에 반환하기 위해 response객체
         userService.login(loginRequestDto, response);
 
-        return ResponseEntity.ok(new ResponseMsgDto(HttpStatus.OK,"로그인 성공"));
+        return ResponseEntity.ok(new ResponseMsgDto(HttpStatus.OK.value(),"로그인 성공"));
     }
 }
