@@ -1,9 +1,6 @@
 package com.sparta.hanghaememo.controller;
 
-import com.sparta.hanghaememo.dto.DelResponseDto;
-import com.sparta.hanghaememo.dto.MemoRequestDto;
-import com.sparta.hanghaememo.dto.MemoResponseDto;
-import com.sparta.hanghaememo.dto.UpdateResponseDto;
+import com.sparta.hanghaememo.dto.*;
 import com.sparta.hanghaememo.service.MemoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -26,8 +23,8 @@ public class MemoController {
     }
     //모든 데이터 뽑아오기
     @GetMapping("/api/memos")
-    public List<MemoResponseDto> getMemos(HttpServletRequest request){
-        return memoService.getMemos(request);
+    public List<MemoResponseDto> getMemos(){
+        return memoService.getMemos();
     }
 
     //아이디별 하나의 자료뽑아오기
@@ -45,8 +42,12 @@ public class MemoController {
 
     //아이디가 일치하는 데이터 삭제
     @DeleteMapping("/api/delete/{id}")
-    public DelResponseDto deleteMemo(@PathVariable Long id, @RequestBody MemoRequestDto requestDto,HttpServletRequest request){
-        return memoService.deleteMemo(id,requestDto,request);
+    public DelResponseDto deleteMemo(@PathVariable Long id, HttpServletRequest request){
+        return memoService.deleteMemo(id,request);
     }
 
+   /* @PostMapping("/api/comment/{id}")
+    public CommentDto postComment(@PathVariable Long id,@RequestBody MemoRequestDto requestDto, HttpServletRequest request){
+        return memoService.postComment(id,requestDto,request);
+    }*/
 }

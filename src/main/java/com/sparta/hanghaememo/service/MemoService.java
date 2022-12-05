@@ -33,7 +33,6 @@ public class MemoService {
     public MemoResponseDto createMemo(MemoRequestDto requestDto , HttpServletRequest request) {
         String token = jwtUtil.resolveToken(request);
         Claims claims;
-        System.out.println(token);
 
         /*if(UserRoleEnum.ADMIN.equals(jwtUtil.validateToken(role))){
 
@@ -72,9 +71,8 @@ public class MemoService {
     }*/
 
 
-    //아이디 리스트 중 하나 출력
-    //리스트 형식으로 출력
-    @Transactional
+    //토큰을 받아서 토큰의 아이디와 일치하는 게시글만 출력
+    /*@Transactional
     public List<MemoResponseDto> getMemos(HttpServletRequest request) {
 
         String token = jwtUtil.resolveToken(request);
@@ -93,16 +91,12 @@ public class MemoService {
             User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
                     () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
             );
+
+            // 요청받은 DTO 로 DB에 저장할 객체 만들기
             List<MemoResponseDto> list =new ArrayList<>();
             List<Memo> memoList;
-            if(user.getRole().equals(UserRoleEnum.ADMIN)){
+            memoList =memoRepository.findAllByUserId(user.getId());
 
-                memoList =memoRepository.findAllByOrderByModifiedAtDesc();
-
-            }else {
-                // 요청받은 DTO 로 DB에 저장할 객체 만들기
-                memoList = memoRepository.findAllByUserId(user.getId());
-            }
             for(Memo memo : memoList){
                 list.add(new MemoResponseDto(memo));
             }
@@ -114,8 +108,8 @@ public class MemoService {
             return null;
 
         }
-    }
-   /* @Transactional
+    }*/
+    @Transactional
     public List<MemoResponseDto> getMemos() {
         List<Memo> memoList = memoRepository.findAllByOrderByModifiedAtDesc();
         List<MemoResponseDto> memoResponseDto = new ArrayList<>();
@@ -124,7 +118,7 @@ public class MemoService {
             memoResponseDto.add(memoDto);
         }
         return memoResponseDto;
-    }*/
+    }
 
     //아이디 리스트 중 하나 출력
     @Transactional
@@ -157,11 +151,16 @@ public class MemoService {
             User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
                     () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
             );
-
-            Memo memo = memoRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
-                    () -> new NullPointerException("아이디가 일치하지 않습니다.")
-            );
-
+            Memo memo;
+            //유저의 권한이 admin과 같으면 모든 데이터 수정 가능
+            if(user.getRole().equals(UserRoleEnum.ADMIN)){
+                memo = memoRepository.findById(id).orElseThrow(NullPointerException::new);
+            }else {
+                //유저의 권한이 admin이 아니면 아이디가 같은 유저만 수정 가능
+                memo = memoRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
+                        () -> new NullPointerException("아이디가 일치하지 않습니다.")
+                );
+            }
             memo.update(requestDto);
 
             return new UpdateResponseDto(memo);
@@ -172,7 +171,7 @@ public class MemoService {
 
     //delete
     @Transactional
-    public DelResponseDto deleteMemo(Long id, MemoRequestDto requestDto,HttpServletRequest request) {
+    public DelResponseDto deleteMemo(Long id,HttpServletRequest request) {
         String token = jwtUtil.resolveToken(request);
         Claims claims;
 
@@ -191,8 +190,17 @@ public class MemoService {
                     () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
             );
 
+            Memo memo;
+            if(user.getRole().equals(UserRoleEnum.ADMIN)) {
+                memo = memoRepository.findById(id).orElseThrow(NullPointerException::new);
+            }
+            else {
+                memo = memoRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
+                        () -> new NullPointerException("아이디가 일치하지 않습니다.")
+                );
+            }
 
-            memoRepository.deleteById(id);
+            memoRepository.delete(memo);
 
             return new DelResponseDto(true);
 
@@ -210,4 +218,11 @@ public class MemoService {
         );
         return memo;
     }
+
+   /* public CommentDto postComment(Long id, MemoRequestDto requestDto, HttpServletRequest request) {
+
+
+
+
+    }*/
 }
