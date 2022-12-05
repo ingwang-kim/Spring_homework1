@@ -22,7 +22,7 @@ public class Memo extends Timestamped {
     private String contents;
 
     @JsonIgnore
-    @Column(nullable = false)
+    @Column
     private String pw;
 
     @Column(nullable = false)

@@ -1,6 +1,5 @@
 package com.sparta.hanghaememo.dto;
 
-import com.sparta.hanghaememo.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,9 +15,4 @@ public class SignupRequestDto {
     private boolean admin = false;
     private String adminToken = "";
 
-
-    public SignupRequestDto(User user){
-        this.username = user.getUsername();
-        this.pw = user.getPw();
-    }
 }

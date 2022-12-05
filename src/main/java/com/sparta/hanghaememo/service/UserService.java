@@ -13,8 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
-import static com.sparta.hanghaememo.jwt.JwtUtil.AUTHORIZATION_HEADER;
-
 
 @Service
 @RequiredArgsConstructor
@@ -88,7 +86,7 @@ public class UserService {
             throw  new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
-        response.addHeader(AUTHORIZATION_HEADER, jwtUtil.createToken(user.getUsername(), user.getRole()));
+        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getUsername(), user.getRole()));
         //add header로 헤더에 값 넣어주기 (키, 토큰)
     }
 }
