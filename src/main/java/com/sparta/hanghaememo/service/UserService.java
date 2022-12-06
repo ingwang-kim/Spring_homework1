@@ -50,27 +50,8 @@ public class UserService {
         }
         User user = new User(username, pw, role);
         userRepository.save(user);
-        /*SignupResponseDto signupResponseDto = new SignupResponseDto();*/
-
-       /* return new ResponseMsgDto(userRepository.save(user));*/
     }
 
-    /* @Transactional(readOnly = true)
-     public void login(LoginRequestDto loginRequestDto) {
-         String username = loginRequestDto.getUsername();
-         String password = loginRequestDto.getPassword();
-
-         // 사용자 확인
-         User user = userRepository.findByUsername(username).orElseThrow(
-                 () -> new IllegalArgumentException("등록된 사용자가 없습니다.")
-         );
-
-         // 비밀번호 확인
-         if(!user.getPassword().equals(password)){
-             throw  new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-         }
-     }
- */
     //로그인
     @Transactional(readOnly = true)
     public void login(LoginRequestDto loginRequestDto, HttpServletResponse response) {

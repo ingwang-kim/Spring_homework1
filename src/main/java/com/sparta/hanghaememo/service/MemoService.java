@@ -33,12 +33,6 @@ public class MemoService {
         String token = jwtUtil.resolveToken(request);
         Claims claims;
 
-        /*if(UserRoleEnum.ADMIN.equals(jwtUtil.validateToken(role))){
-
-        }*/
-        /*System.out.println(jwtUtil.validateToken(role));*/
-
-
         if (token != null) {
 
             if (jwtUtil.validateToken(token)) {
@@ -63,52 +57,6 @@ public class MemoService {
     }
 
 
-    //모든 데이터 뽑아오기
-    /*@Transactional
-    public List<MemoResponseDto> getMemos() {
-        List<Memo> memo = memoRepository.findAllByOrderByModifiedAtDesc();
-        return memo.stream().map(memo1 ->new MemoResponseDto(memo1)).collect(Collectors.toList());
-    }*/
-
-
-    //토큰을 받아서 토큰의 아이디와 일치하는 게시글만 출력
-    /*@Transactional
-    public List<MemoResponseDto> getMemos(HttpServletRequest request) {
-
-        String token = jwtUtil.resolveToken(request);
-        Claims claims;
-
-        // 토큰이 있는 경우에만 출력
-        if (token != null) {
-            if (jwtUtil.validateToken(token)) {
-                // 토큰에서 사용자 정보 가져오기
-                claims = jwtUtil.getUserInfoFromToken(token);
-            } else {
-                throw new IllegalArgumentException("Token Error");
-            }
-
-            // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
-            User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
-            );
-
-            // 요청받은 DTO 로 DB에 저장할 객체 만들기
-            List<MemoResponseDto> list =new ArrayList<>();
-            List<Memo> memoList;
-            memoList =memoRepository.findAllByUserId(user.getId());
-
-            for(Memo memo : memoList){
-                list.add(new MemoResponseDto(memo));
-            }
-
-            return list;
-
-        }else {
-
-            return null;
-
-        }
-    }*/
     @Transactional
     public List<MemoResponseDto> getMemos() {
         List<Memo> memoList = memoRepository.findAllByOrderByModifiedAtDesc();
@@ -215,31 +163,4 @@ public class MemoService {
         return memo;
     }
 
-    /*public CommentResponseDto postComment(Long id, MemoRequestDto requestDto, HttpServletRequest request) {
-
-
-        String token = jwtUtil.resolveToken(request);
-        Claims claims;
-
-        if (token != null) {
-            if (jwtUtil.validateToken(token)) {
-                // 토큰에서 사용자 정보 가져오기
-                claims = jwtUtil.getUserInfoFromToken(token);
-            } else {
-                throw new IllegalArgumentException("Token Error");
-            }
-
-            // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
-            User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
-            );
-
-            Comment comment = CommentRepository.save(new Memo(requestDto, user.getId()));
-            return new CommentResponseDto(comment;
-
-        } else {
-            return null;
-        }
-
-    }*/
 }

@@ -9,10 +9,5 @@ import java.util.Optional;
 
 public interface MemoRepository extends JpaRepository<Memo, Long> {
     List<Memo> findAllByOrderByModifiedAtDesc();
-
-    List<Memo> findAllByUsername(String userName);
-
-    List<Memo> findByUserId(Long userId);
-
     Optional<Memo> findByIdAndUserId(Long id, Long userId);
 }
