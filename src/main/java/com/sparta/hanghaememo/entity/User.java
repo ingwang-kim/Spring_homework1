@@ -4,7 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 @Getter
 @NoArgsConstructor
@@ -31,6 +32,9 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
+ /*   @OneToMany
+    List<Memo> memos = new ArrayList<>();
+*/
     public User(String username, String pw, UserRoleEnum role) {
         this.username = username;
         this.pw = pw;

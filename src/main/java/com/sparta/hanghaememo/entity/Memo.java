@@ -33,9 +33,9 @@ public class Memo extends Timestamped {
 
 
 
-
-    public Memo(MemoRequestDto requestDto , Long id, String username) {
+    public Memo(MemoRequestDto requestDto , Long id, String username ) {
         this.username = username;
+
         this.contents = requestDto.getContents();
         this.pw = requestDto.getPw();
         this.title = requestDto.getTitle();
