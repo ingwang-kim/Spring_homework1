@@ -1,12 +1,11 @@
 package com.sparta.hanghaememo.dto;
 
 import com.sparta.hanghaememo.entity.Comment;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.sparta.hanghaememo.entity.Memo;
+import lombok.*;
 
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,6 +15,8 @@ public class CommentDto {
     private Long mId; //메모 아이디
     private String username;
     private String comment;
+    private Memo memo;
+
 
     public CommentDto(Comment comment){
 

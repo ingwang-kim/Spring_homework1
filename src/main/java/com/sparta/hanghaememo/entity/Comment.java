@@ -1,5 +1,7 @@
 package com.sparta.hanghaememo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sparta.hanghaememo.dto.CommentDto;
 import com.sparta.hanghaememo.dto.CommentRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,14 +15,16 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
+@Table(name = "COMMENT")
 public class Comment extends Timestamped {
 
     @Id
-    @GeneratedValue(strategy =  GenerationType.AUTO)
+    @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)//로딩
-    @JoinColumn(name = "mId")
+    @JoinColumn(name = "MEMO_ID")
     private Memo memo;
 
 
@@ -36,5 +40,11 @@ public class Comment extends Timestamped {
         this.comment = requestDto.getComment();
         this.username = username;
     }
+
+    public void update(CommentDto commentdto){
+        this.comment = commentdto.getComment();
+
+    }
+
 
 }

@@ -61,6 +61,7 @@ public class MemoService {
     public List<MemoResponseDto> getMemos() {
         List<Memo> memoList = memoRepository.findAllByOrderByModifiedAtDesc();
         List<MemoResponseDto> memoResponseDto = new ArrayList<>();
+
         for(Memo memo : memoList){
             MemoResponseDto memoDto = new MemoResponseDto(memo);
             memoResponseDto.add(memoDto);

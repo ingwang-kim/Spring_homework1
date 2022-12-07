@@ -6,13 +6,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
 @NoArgsConstructor
+@Table(name = "MEMO")
 public class Memo extends Timestamped {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -31,11 +34,16 @@ public class Memo extends Timestamped {
     @Column(nullable = false)
     private Long userId;
 
+    @OneToMany(mappedBy = "memo") //외래키 이름으로 mappedBy
+    @OrderBy("createdAt desc")
+    private List<Comment> commentList= new ArrayList<>();
+
+
 
 
     public Memo(MemoRequestDto requestDto , Long id, String username ) {
-        this.username = username;
 
+        this.username = username;
         this.contents = requestDto.getContents();
         this.pw = requestDto.getPw();
         this.title = requestDto.getTitle();
