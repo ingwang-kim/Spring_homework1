@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "MEMO")
 public class Memo extends Timestamped {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

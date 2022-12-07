@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 
 @Service
@@ -58,7 +59,7 @@ public class CommentService{
                     .comment(commentDto.getComment())
                     .build();
 
-            
+
             commentRepository.save(comments);
 
             return new CommentDto(comments);
@@ -67,10 +68,9 @@ public class CommentService{
             return null;
         }
 
-
     }
 
-    public CommentDto updateComment(CommentDto commentDto, Long id, HttpServletRequest request) {
+    public CommentDto updateComment(Long id, CommentDto commentDto, HttpServletRequest request) {
         String token = jwtUtil.resolveToken(request);
         Claims claims;
 
@@ -91,6 +91,7 @@ public class CommentService{
 
 
             Comment comment;
+            Optional<Memo> memo = memoRepository.findById(id);
             //유저의 권한이 admin과 같으면 모든 데이터 수정 가능
             if(user.getRole().equals(UserRoleEnum.ADMIN)){
                 comment = commentRepository.findById(id).orElseThrow(NullPointerException::new);

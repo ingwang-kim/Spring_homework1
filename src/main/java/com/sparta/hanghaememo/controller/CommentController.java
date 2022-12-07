@@ -21,8 +21,8 @@ public class CommentController {
     }
 
     @PutMapping("/api/comment/{id}")
-    public CommentDto updateComment(@RequestBody CommentDto commentDto,@PathVariable Long id, HttpServletRequest request){
-        return commentService.updateComment(commentDto,id,request);
+    public CommentDto updateComment(@PathVariable Long id,@RequestBody CommentDto commentDto, HttpServletRequest request){
+        return commentService.updateComment(id,commentDto,request);
     }
     @DeleteMapping("/api/comment/{id}")
     public ResponseMsgDto deleteComment(@PathVariable Long id, HttpServletRequest request){
