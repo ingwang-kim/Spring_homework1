@@ -35,7 +35,7 @@ public class Memo extends Timestamped {
     @Column(nullable = false)
     private Long userId;
 
-    @OneToMany(mappedBy = "memo") //외래키 이름으로 mappedBy
+    @OneToMany(mappedBy = "memo") //테이블 이름으로 mappedBy
     @OrderBy("createdAt desc")
     private List<Comment> commentList= new ArrayList<>();
 

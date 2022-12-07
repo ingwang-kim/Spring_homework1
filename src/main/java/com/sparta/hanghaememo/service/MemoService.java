@@ -9,6 +9,8 @@ import com.sparta.hanghaememo.entity.UserRoleEnum;
 import com.sparta.hanghaememo.jwt.JwtUtil;
 import com.sparta.hanghaememo.repository.MemoRepository;
 import com.sparta.hanghaememo.repository.UserRepository;
+import com.sparta.hanghaememo.util.exception.ErrorCode;
+import com.sparta.hanghaememo.util.exception.RequestException;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -52,7 +54,7 @@ public class MemoService {
             return new MemoResponseDto(memo);
 
         } else {
-            return null;
+            throw new RequestException(ErrorCode.BAD_TOKKEN_400);
         }
     }
 
@@ -114,7 +116,7 @@ public class MemoService {
 
             return new UpdateResponseDto(memo);
         }else {
-            return null;
+            throw new RequestException(ErrorCode.BAD_TOKKEN_400);
         }
     }
 

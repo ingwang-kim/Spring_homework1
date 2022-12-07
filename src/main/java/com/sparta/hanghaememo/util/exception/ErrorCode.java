@@ -8,7 +8,8 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
 
     COMMON_BAD_REQUEST_400(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
-    BAD_TOKKEN_400(HttpStatus.BAD_REQUEST, "토큰이 유효하지 않습니다.");
+    BAD_TOKKEN_400(HttpStatus.BAD_REQUEST, "토큰이 유효하지 않습니다."),
+    USER_BAD_REQUEST_400(HttpStatus.BAD_REQUEST, "사용자가 존재하지 않습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
