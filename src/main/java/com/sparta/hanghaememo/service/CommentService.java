@@ -41,17 +41,17 @@ public class CommentService{
                 // 토큰에서 사용자 정보 가져오기
                 claims = jwtUtil.getUserInfoFromToken(token);
             } else {
-                throw new RequestException(ErrorCode.BAD_TOKKEN_400);
+                throw new RequestException(ErrorCode.유효하지_않은_토큰_400);
             }
 
 
             // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
             User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+                    () -> new RequestException(ErrorCode.사용자가_존재하지_않습니다_400)
             );
 
             Memo memo = memoRepository.findById(id).orElseThrow(
-                    () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
+                    () -> new RequestException(ErrorCode.게시글이_존재하지_않습니다_400)
             );
 
             Comment comments = Comment.builder()
@@ -67,7 +67,7 @@ public class CommentService{
             return new CommentDto(comments);
         }else {
             /*return new ResponseMsgDto(HttpStatus.OK.value(), "실패");*/
-            throw new RequestException(ErrorCode.BAD_TOKKEN_400);
+            throw new RequestException(ErrorCode.유효하지_않은_토큰_400);
         }
 
     }
@@ -82,13 +82,13 @@ public class CommentService{
                 // 토큰에서 사용자 정보 가져오기
                 claims = jwtUtil.getUserInfoFromToken(token);
             } else {
-                throw new RequestException(ErrorCode.BAD_TOKKEN_400);
+                throw new RequestException(ErrorCode.유효하지_않은_토큰_400);
             }
 
 
             // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
             User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+                    () -> new RequestException(ErrorCode.중복_사용자_존재_400)
             );
 
 
@@ -99,14 +99,14 @@ public class CommentService{
             }else {
                 //유저의 권한이 admin이 아니면 아이디가 같은 유저만 수정 가능
                 comment = commentRepository.findByIdAndUsername(id, user.getUsername()).orElseThrow(
-                        () -> new NullPointerException("아이디가 일치하지 않습니다.")
+                        () -> new RequestException(ErrorCode.아이디가_일치하지_않습니다)
                 );
             }
             comment.update(commentDto);
 
             return new CommentDto(comment);
         }else {
-            throw new RequestException(ErrorCode.BAD_TOKKEN_400);
+            throw new RequestException(ErrorCode.유효하지_않은_토큰_400);
         }
     }
 
@@ -121,13 +121,13 @@ public class CommentService{
                 // 토큰에서 사용자 정보 가져오기
                 claims = jwtUtil.getUserInfoFromToken(token);
             } else {
-                throw new RequestException(ErrorCode.BAD_TOKKEN_400);
+                throw new RequestException(ErrorCode.유효하지_않은_토큰_400);
             }
 
 
             // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
             User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+                    () -> new RequestException(ErrorCode.사용자가_존재하지_않습니다_400)
             );
             Comment comment;
             //유저의 권한이 admin과 같으면 모든 데이터 삭제 가능
@@ -136,7 +136,7 @@ public class CommentService{
             } else {
                 //유저의 권한이 admin이 아니면 아이디가 같은 유저만 삭제 가능
                 comment = commentRepository.findByIdAndUsername(id, user.getUsername()).orElseThrow(
-                        () -> new NullPointerException("아이디가 일치하지 않습니다.")
+                        () -> new RequestException(ErrorCode.아이디가_일치하지_않습니다)
                 );
             }
 

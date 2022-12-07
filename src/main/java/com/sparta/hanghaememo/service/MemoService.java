@@ -41,20 +41,20 @@ public class MemoService {
                 // 토큰에서 사용자 정보 가져오기
                 claims = jwtUtil.getUserInfoFromToken(token);
             } else {
-                throw new IllegalArgumentException("Token Error");
+                throw new RequestException(ErrorCode.유효하지_않은_토큰_400);
             }
 
 
             // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
             User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+                    () -> new RequestException(ErrorCode.사용자가_존재하지_않습니다_400)
             );
 
             Memo memo = memoRepository.save(new Memo(requestDto, user.getId(),user.getUsername()));
             return new MemoResponseDto(memo);
 
         } else {
-            throw new RequestException(ErrorCode.BAD_TOKKEN_400);
+            throw new RequestException(ErrorCode.유효하지_않은_토큰_400);
         }
     }
 
@@ -95,12 +95,12 @@ public class MemoService {
                 // 토큰에서 사용자 정보 가져오기
                 claims = jwtUtil.getUserInfoFromToken(token);
             } else {
-                throw new IllegalArgumentException("Token Error");
+                throw new RequestException(ErrorCode.유효하지_않은_토큰_400);
             }
 
             // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
             User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+                    () -> new RequestException(ErrorCode.사용자가_존재하지_않습니다_400)
             );
             Memo memo;
             //유저의 권한이 admin과 같으면 모든 데이터 수정 가능
@@ -109,14 +109,14 @@ public class MemoService {
             }else {
                 //유저의 권한이 admin이 아니면 아이디가 같은 유저만 수정 가능
                 memo = memoRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
-                        () -> new NullPointerException("아이디가 일치하지 않습니다.")
+                        () -> new RequestException(ErrorCode.아이디가_일치하지_않습니다)
                 );
             }
             memo.update(requestDto);
 
             return new UpdateResponseDto(memo);
         }else {
-            throw new RequestException(ErrorCode.BAD_TOKKEN_400);
+            throw new RequestException(ErrorCode.유효하지_않은_토큰_400);
         }
     }
 
@@ -133,12 +133,12 @@ public class MemoService {
                 // 토큰에서 사용자 정보 가져오기
                 claims = jwtUtil.getUserInfoFromToken(token);
             } else {
-                throw new IllegalArgumentException("Token Error");
+                throw new RequestException(ErrorCode.유효하지_않은_토큰_400);
             }
 
             // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
             User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                    () -> new IllegalArgumentException("사용자가 존재하지 않습니다.")
+                    () -> new RequestException(ErrorCode.사용자가_존재하지_않습니다_400)
             );
 
             Memo memo;
@@ -148,7 +148,7 @@ public class MemoService {
             } else {
                 //유저의 권한이 admin이 아니면 아이디가 같은 유저만 삭제 가능
                 memo = memoRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
-                        () -> new NullPointerException("아이디가 일치하지 않습니다.")
+                        () -> new RequestException(ErrorCode.아이디가_일치하지_않습니다)
                 );
             }
 
