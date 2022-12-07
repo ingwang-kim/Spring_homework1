@@ -11,6 +11,4 @@ public class ResponseMsgDto {
     private int statusCode;
     private String msg;
 
-
-
 }
