@@ -4,19 +4,17 @@ import com.sparta.hanghaememo.dto.MemoRequestDto;
 import com.sparta.hanghaememo.dto.MemoResponseDto;
 import com.sparta.hanghaememo.dto.UpdateResponseDto;
 import com.sparta.hanghaememo.entity.Memo;
-import com.sparta.hanghaememo.entity.User;
+import com.sparta.hanghaememo.entity.Users;
 import com.sparta.hanghaememo.entity.UserRoleEnum;
 import com.sparta.hanghaememo.jwt.JwtUtil;
 import com.sparta.hanghaememo.repository.MemoRepository;
 import com.sparta.hanghaememo.repository.UserRepository;
 import com.sparta.hanghaememo.util.exception.ErrorCode;
 import com.sparta.hanghaememo.util.exception.RequestException;
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,31 +29,10 @@ public class MemoService {
 
     //데이터 생성
     @Transactional
-    public MemoResponseDto createMemo(MemoRequestDto requestDto , HttpServletRequest request) {
-        String token = jwtUtil.resolveToken(request);
-        Claims claims;
+    public MemoResponseDto createMemo(MemoRequestDto requestDto , Users users) {
 
-        if (token != null) {
-
-            if (jwtUtil.validateToken(token)) {
-                // 토큰에서 사용자 정보 가져오기
-                claims = jwtUtil.getUserInfoFromToken(token);
-            } else {
-                throw new RequestException(ErrorCode.유효하지_않은_토큰_400);
-            }
-
-
-            // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
-            User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                    () -> new RequestException(ErrorCode.사용자가_존재하지_않습니다_400)
-            );
-
-            Memo memo = memoRepository.save(new Memo(requestDto, user.getId(),user.getUsername()));
+            Memo memo = memoRepository.save(new Memo(requestDto, users));
             return new MemoResponseDto(memo);
-
-        } else {
-            throw new RequestException(ErrorCode.유효하지_않은_토큰_400);
-        }
     }
 
 
@@ -75,95 +52,51 @@ public class MemoService {
     @Transactional
     public MemoResponseDto openMemo(Long id) {
 
-            Memo memo = getMemo(id, "아이디가 존재하지 않습니다");
-            MemoResponseDto memoResponseDto = new MemoResponseDto(memo);
+            Memo memo = memoRepository.findById(id).orElseThrow(
+                    () -> new RequestException(ErrorCode.게시글이_존재하지_않습니다_400)
+            );
 
-            return memoResponseDto;
+            return new MemoResponseDto(memo);
     }
 
 
     //update
     @Transactional
-    public UpdateResponseDto update(Long id, MemoRequestDto requestDto, HttpServletRequest request) {
-        String token = jwtUtil.resolveToken(request);
-        Claims claims;
-
-        // 토큰이 있는 경우에만 관심상품 조회 가능
-        if (token != null) {
-            // Token 검증
-            if (jwtUtil.validateToken(token)) {
-                // 토큰에서 사용자 정보 가져오기
-                claims = jwtUtil.getUserInfoFromToken(token);
-            } else {
-                throw new RequestException(ErrorCode.유효하지_않은_토큰_400);
-            }
-
-            // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
-            User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                    () -> new RequestException(ErrorCode.사용자가_존재하지_않습니다_400)
-            );
+    public UpdateResponseDto update(Long id, MemoRequestDto requestDto, Users users) {
             Memo memo;
             //유저의 권한이 admin과 같으면 모든 데이터 수정 가능
-            if(user.getRole().equals(UserRoleEnum.ADMIN)){
-                memo = memoRepository.findById(id).orElseThrow(NullPointerException::new);
+            if(users.getRole().equals(UserRoleEnum.ADMIN)){
+                memo = memoRepository.findById(id).orElseThrow(
+                        () -> new RequestException(ErrorCode.게시글이_존재하지_않습니다_400)
+                );
             }else {
                 //유저의 권한이 admin이 아니면 아이디가 같은 유저만 수정 가능
-                memo = memoRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
+                memo = memoRepository.findByIdAndUsername(id, users.getUsername()).orElseThrow(
                         () -> new RequestException(ErrorCode.아이디가_일치하지_않습니다)
                 );
             }
             memo.update(requestDto);
 
             return new UpdateResponseDto(memo);
-        }else {
-            throw new RequestException(ErrorCode.유효하지_않은_토큰_400);
-        }
     }
 
     //delete
     @Transactional
-    public void deleteMemo(Long id,HttpServletRequest request) {
-        String token = jwtUtil.resolveToken(request);
-        Claims claims;
-
-        // 토큰이 있는 경우에만 관심상품 조회 가능
-        if (token != null) {
-            // Token 검증
-            if (jwtUtil.validateToken(token)) {
-                // 토큰에서 사용자 정보 가져오기
-                claims = jwtUtil.getUserInfoFromToken(token);
-            } else {
-                throw new RequestException(ErrorCode.유효하지_않은_토큰_400);
-            }
-
-            // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
-            User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
-                    () -> new RequestException(ErrorCode.사용자가_존재하지_않습니다_400)
-            );
-
+    public void deleteMemo(Long id, Users users) {
             Memo memo;
             //유저의 권한이 admin과 같으면 모든 데이터 삭제 가능
-            if (user.getRole().equals(UserRoleEnum.ADMIN)) {
-                memo = memoRepository.findById(id).orElseThrow(NullPointerException::new);
+            if (users.getRole().equals(UserRoleEnum.ADMIN)) {
+                memo = memoRepository.findById(id).orElseThrow(
+                        () -> new RequestException(ErrorCode.게시글이_존재하지_않습니다_400)
+                );
             } else {
                 //유저의 권한이 admin이 아니면 아이디가 같은 유저만 삭제 가능
-                memo = memoRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
+                memo = memoRepository.findByIdAndUsername(id, users.getUsername()).orElseThrow(
                         () -> new RequestException(ErrorCode.아이디가_일치하지_않습니다)
                 );
             }
-
             memoRepository.delete(memo);
-
-        }
-
     }
 
-    // memo값이 null값인지 확인하는 메소드
-    private Memo getMemo(Long id, String 존재하지_않습니다) {
-        Memo memo=memoRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException()
-        );
-        return memo;
-    }
 
 }

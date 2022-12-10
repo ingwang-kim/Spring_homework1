@@ -1,10 +1,7 @@
 package com.sparta.hanghaememo.entity;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.hanghaememo.dto.MemoRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,37 +22,34 @@ public class Memo extends Timestamped {
     @Column(nullable = false)
     private String contents;
 
-    @JsonIgnore
-    @Column
-    private String pw;
-
     @Column(nullable = false)
     private String title;
-
-    @Column(nullable = false)
-    private Long userId;
 
     @OneToMany(mappedBy = "memo") //테이블 이름으로 mappedBy
     @OrderBy("createdAt desc")
     private List<Comment> commentList= new ArrayList<>();
 
+    @OneToMany(mappedBy = "memo")
+    private List<MemoLike> memoLikes=new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private Users users;
 
 
+    public Memo(MemoRequestDto requestDto , Users users) {
 
-    public Memo(MemoRequestDto requestDto , Long id, String username ) {
-
-        this.username = username;
+        this.username = users.getUsername();
         this.contents = requestDto.getContents();
-        this.pw = requestDto.getPw();
         this.title = requestDto.getTitle();
-        this.userId=id;
+        this.users = users;
+
     }
     public void update(MemoRequestDto memoRequestDto) {
 
         this.title = memoRequestDto.getTitle();
         this.username = memoRequestDto.getUsername();
         this.contents = memoRequestDto.getContents();
-        this.pw = memoRequestDto.getPw();
 
     }
 

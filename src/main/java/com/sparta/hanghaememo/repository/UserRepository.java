@@ -1,12 +1,12 @@
 package com.sparta.hanghaememo.repository;
 
-import com.sparta.hanghaememo.entity.User;
+import com.sparta.hanghaememo.entity.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<Users, Long> {
 
-    Optional<User> findByUsername(String name);
+    Optional<Users> findByUsername(String name);
 
 }

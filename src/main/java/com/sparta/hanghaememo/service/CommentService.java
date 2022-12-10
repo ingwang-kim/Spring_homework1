@@ -3,7 +3,7 @@ package com.sparta.hanghaememo.service;
 import com.sparta.hanghaememo.dto.CommentDto;
 import com.sparta.hanghaememo.entity.Comment;
 import com.sparta.hanghaememo.entity.Memo;
-import com.sparta.hanghaememo.entity.User;
+import com.sparta.hanghaememo.entity.Users;
 import com.sparta.hanghaememo.entity.UserRoleEnum;
 import com.sparta.hanghaememo.jwt.JwtUtil;
 import com.sparta.hanghaememo.repository.CommentRepository;
@@ -46,7 +46,7 @@ public class CommentService{
 
 
             // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
-            User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
+            Users users = userRepository.findByUsername(claims.getSubject()).orElseThrow(
                     () -> new RequestException(ErrorCode.사용자가_존재하지_않습니다_400)
             );
 
@@ -57,7 +57,7 @@ public class CommentService{
             Comment comments = Comment.builder()
                     .id(commentDto.getId())
                     .memo(memo)
-                    .username(user.getUsername())
+                    .username(users.getUsername())
                     .comment(commentDto.getComment())
                     .build();
 
@@ -87,18 +87,18 @@ public class CommentService{
 
 
             // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
-            User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
+            Users users = userRepository.findByUsername(claims.getSubject()).orElseThrow(
                     () -> new RequestException(ErrorCode.중복_사용자_존재_400)
             );
 
 
             Comment comment;
             //유저의 권한이 admin과 같으면 모든 데이터 수정 가능
-            if(user.getRole().equals(UserRoleEnum.ADMIN)){
+            if(users.getRole().equals(UserRoleEnum.ADMIN)){
                 comment = commentRepository.findById(id).orElseThrow(NullPointerException::new);
             }else {
                 //유저의 권한이 admin이 아니면 아이디가 같은 유저만 수정 가능
-                comment = commentRepository.findByIdAndUsername(id, user.getUsername()).orElseThrow(
+                comment = commentRepository.findByIdAndUsername(id, users.getUsername()).orElseThrow(
                         () -> new RequestException(ErrorCode.아이디가_일치하지_않습니다)
                 );
             }
@@ -126,16 +126,16 @@ public class CommentService{
 
 
             // 토큰에서 가져온 사용자 정보를 사용하여 DB 조회
-            User user = userRepository.findByUsername(claims.getSubject()).orElseThrow(
+            Users users = userRepository.findByUsername(claims.getSubject()).orElseThrow(
                     () -> new RequestException(ErrorCode.사용자가_존재하지_않습니다_400)
             );
             Comment comment;
             //유저의 권한이 admin과 같으면 모든 데이터 삭제 가능
-            if (user.getRole().equals(UserRoleEnum.ADMIN)) {
+            if (users.getRole().equals(UserRoleEnum.ADMIN)) {
                 comment = commentRepository.findById(id).orElseThrow(NullPointerException::new);
             } else {
                 //유저의 권한이 admin이 아니면 아이디가 같은 유저만 삭제 가능
-                comment = commentRepository.findByIdAndUsername(id, user.getUsername()).orElseThrow(
+                comment = commentRepository.findByIdAndUsername(id, users.getUsername()).orElseThrow(
                         () -> new RequestException(ErrorCode.아이디가_일치하지_않습니다)
                 );
             }

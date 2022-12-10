@@ -25,9 +25,9 @@ public class UserController {
     //회원가입
     @PostMapping("/signup")
     public ResponseEntity<ResponseMsgDto> signup(@RequestBody SignupRequestDto signupRequestDto) {
-        userService.signup(signupRequestDto);
-       /* return ResponseEntity.ok(signupRequestDto);*/
-        return ResponseEntity.ok(new ResponseMsgDto(HttpStatus.OK.value(),"가입완료"));
+            userService.signup(signupRequestDto);
+            /* return ResponseEntity.ok(signupRequestDto);*/
+            return ResponseEntity.ok(new ResponseMsgDto(HttpStatus.OK.value(),"가입완료"));
     }
     // 로그인
     //form태그로 넘어왔기 때문에 ModelAttribute형식으로 받아와 @RequestBody 필요x

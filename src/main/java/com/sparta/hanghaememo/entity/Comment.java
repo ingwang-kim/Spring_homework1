@@ -2,13 +2,14 @@ package com.sparta.hanghaememo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.hanghaememo.dto.CommentDto;
-import com.sparta.hanghaememo.dto.CommentRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -22,11 +23,11 @@ public class Comment extends Timestamped {
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Long id;
 
-    @JsonIgnore
+
     @ManyToOne(fetch = FetchType.LAZY)//로딩
     @JoinColumn(name = "MEMO_ID")
+    @JsonIgnore
     private Memo memo;
-
 
     @Column(nullable = false)
     private String comment;
@@ -34,12 +35,10 @@ public class Comment extends Timestamped {
     @Column(nullable = false)
     private String username;
 
+    @OneToMany(mappedBy = "comment")
+    private List<CommentLike> commentLikes = new ArrayList<>();
 
 
-    public Comment(CommentRequestDto requestDto, String username){
-        this.comment = requestDto.getComment();
-        this.username = username;
-    }
 
     public void update(CommentDto commentdto){
         this.comment = commentdto.getComment();

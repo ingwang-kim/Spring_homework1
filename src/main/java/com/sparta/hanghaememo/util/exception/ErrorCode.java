@@ -14,8 +14,11 @@ public enum ErrorCode {
     중복_사용자_존재_400(HttpStatus.BAD_REQUEST, "중복된 아이디 입니다."),
     비밀번호가_일치하지_않습니다_400(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다."),
     관리자_비밀번호가_일치하지_않습니다_400(HttpStatus.BAD_REQUEST, "관리자 비밀번호가 일치하지 않습니다."),
-    게시글이_존재하지_않습니다_400(HttpStatus.BAD_REQUEST, "사용자가 존재하지 않습니다."),
+    게시글이_존재하지_않습니다_400(HttpStatus.BAD_REQUEST, "게시글이 존재하지 않습니다."),
+    댓글이_존재하지_않습니다_400(HttpStatus.BAD_REQUEST, "댓글이 존재하지 않습니다."),
     중복된_아이디_입니다_400(HttpStatus.BAD_REQUEST, "중복된 아이디 입니다.");
+
+
 
     private final HttpStatus httpStatus;
     private final String message;
