@@ -1,6 +1,5 @@
 package com.sparta.hanghaememo.dto;
 
-import com.sparta.hanghaememo.entity.CommentLike;
 import lombok.*;
 
 @Getter
@@ -13,10 +12,5 @@ public class CommentLikeDto {
 
     private String userName;
 
-    public CommentLikeDto(CommentLike commentLike){
-        this.cId = commentLike.getComment().getId();
-        this.userName=commentLike.getUsername();
-
-    }
 
 }

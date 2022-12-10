@@ -15,7 +15,7 @@ public class CommentLike {
 
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    private Long cLikeID;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "COMMENT_ID")
@@ -24,14 +24,10 @@ public class CommentLike {
     @ManyToOne
     @JoinColumn(name = "USER_ID")
     private Users users;
-    @Column(nullable = false)
-    private String username;
 
 
     public CommentLike( Users users , Comment comment) {
-        this.username = users.getUsername();
         this.users = users;
-        this.comment = comment;
-        this.cLikeID = comment.getId();
+        this.comment=comment;
     }
 }
