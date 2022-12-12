@@ -20,6 +20,18 @@ public class MemoLike {
     private Long mLikeID;
 
     @ManyToOne
+    @JoinColumn(name = "MEMO_ID")
     private Memo memo;
+
+    @ManyToOne
+    @JoinColumn(name = "USER_ID")
+    private User user;
+
+    public MemoLike(User user, Memo memo){
+        this.user = user;
+        this.memo = memo;
+    }
+
+
 
 }

@@ -16,6 +16,10 @@ public class Memo extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @Column(nullable = false)
     private String username;
 
@@ -32,17 +36,14 @@ public class Memo extends Timestamped {
     @OneToMany(mappedBy = "memo")
     private List<MemoLike> memoLikes=new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private Users users;
 
 
-    public Memo(MemoRequestDto requestDto , Users users) {
+    public Memo(MemoRequestDto requestDto , User user) {
 
-        this.username = users.getUsername();
+        this.username = user.getUsername();
         this.contents = requestDto.getContents();
         this.title = requestDto.getTitle();
-        this.users = users;
+        this.user = user;
 
     }
     public void update(MemoRequestDto memoRequestDto) {

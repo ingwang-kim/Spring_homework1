@@ -4,7 +4,6 @@ import com.sparta.hanghaememo.entity.Comment;
 import com.sparta.hanghaememo.entity.Memo;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,11 +11,14 @@ import java.util.List;
 public class MemoResponseDto{
     private String username;
     private String contents;
-    private List<Comment> commentList = new ArrayList<>();
     private String title;
     private Long id;
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
+    private int MemoLikeCount;
+
+    private List<Comment> commentList = new ArrayList<>();
+    /*private List<CommentDto> commentDtoList = new ArrayList<>();*/
+
+    /*for(Comment comment )*/
 
 
 
@@ -26,8 +28,8 @@ public class MemoResponseDto{
         this.username = memo.getUsername();
         this.contents = memo.getContents();
         this.title = memo.getTitle();
-        this.modifiedAt = memo.getCreatedAt();
-        this.createdAt = memo.getCreatedAt();
+        this.MemoLikeCount = memo.getMemoLikes().size();
         this.commentList = memo.getCommentList();
+
     }
 }

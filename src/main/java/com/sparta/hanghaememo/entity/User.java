@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @Entity(name = "users")
-public class Users {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,13 +28,13 @@ public class Users {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "user")
     List<Memo> memos = new ArrayList<>();
 
-    @OneToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "user")
     List<CommentLike> commentLikes =new ArrayList<>();
 
-    public Users(String username, String pw, UserRoleEnum role) {
+    public User(String username, String pw, UserRoleEnum role) {
         this.username = username;
         this.pw = pw;
         this.role = role;

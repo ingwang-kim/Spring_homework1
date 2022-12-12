@@ -13,9 +13,9 @@ import java.util.List;
 
 @Getter
 @Entity
-@NoArgsConstructor
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "COMMENT")
 public class Comment extends Timestamped {
 
@@ -35,14 +35,29 @@ public class Comment extends Timestamped {
     @Column(nullable = false)
     private String username;
 
+    @Column(nullable = false)
+    private int commentLikeCount;
+
+
     @OneToMany(mappedBy = "comment")
     private List<CommentLike> commentLikes = new ArrayList<>();
 
 
 
+    public Comment(CommentDto commentdto, Memo memo, User user){
+        this.comment = commentdto.getComment();
+        this.memo = memo;
+        this.username = user.getUsername();
+    }
+
+
     public void update(CommentDto commentdto){
         this.comment = commentdto.getComment();
 
+    }
+
+    public void setCommentLikeCount(int num){
+        this.commentLikeCount = num;
     }
 
 

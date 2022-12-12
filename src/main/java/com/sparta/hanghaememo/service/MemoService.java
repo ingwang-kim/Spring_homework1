@@ -4,11 +4,9 @@ import com.sparta.hanghaememo.dto.MemoRequestDto;
 import com.sparta.hanghaememo.dto.MemoResponseDto;
 import com.sparta.hanghaememo.dto.UpdateResponseDto;
 import com.sparta.hanghaememo.entity.Memo;
-import com.sparta.hanghaememo.entity.Users;
 import com.sparta.hanghaememo.entity.UserRoleEnum;
-import com.sparta.hanghaememo.jwt.JwtUtil;
+import com.sparta.hanghaememo.entity.User;
 import com.sparta.hanghaememo.repository.MemoRepository;
-import com.sparta.hanghaememo.repository.UserRepository;
 import com.sparta.hanghaememo.util.exception.ErrorCode;
 import com.sparta.hanghaememo.util.exception.RequestException;
 import lombok.RequiredArgsConstructor;
@@ -21,17 +19,16 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class MemoService {
-    public final MemoRepository memoRepository;
-    private final UserRepository userRepository;
-    private final JwtUtil jwtUtil;
+    private final MemoRepository memoRepository;
+
 
 
 
     //데이터 생성
     @Transactional
-    public MemoResponseDto createMemo(MemoRequestDto requestDto , Users users) {
+    public MemoResponseDto createMemo(MemoRequestDto requestDto , User user) {
 
-            Memo memo = memoRepository.save(new Memo(requestDto, users));
+            Memo memo = memoRepository.save(new Memo(requestDto, user));
             return new MemoResponseDto(memo);
     }
 
@@ -62,16 +59,16 @@ public class MemoService {
 
     //update
     @Transactional
-    public UpdateResponseDto update(Long id, MemoRequestDto requestDto, Users users) {
+    public UpdateResponseDto update(Long id, MemoRequestDto requestDto, User user) {
             Memo memo;
             //유저의 권한이 admin과 같으면 모든 데이터 수정 가능
-            if(users.getRole().equals(UserRoleEnum.ADMIN)){
+            if(user.getRole().equals(UserRoleEnum.ADMIN)){
                 memo = memoRepository.findById(id).orElseThrow(
                         () -> new RequestException(ErrorCode.게시글이_존재하지_않습니다_400)
                 );
             }else {
                 //유저의 권한이 admin이 아니면 아이디가 같은 유저만 수정 가능
-                memo = memoRepository.findByIdAndUsername(id, users.getUsername()).orElseThrow(
+                memo = memoRepository.findByIdAndUsername(id, user.getUsername()).orElseThrow(
                         () -> new RequestException(ErrorCode.아이디가_일치하지_않습니다)
                 );
             }
@@ -82,16 +79,16 @@ public class MemoService {
 
     //delete
     @Transactional
-    public void deleteMemo(Long id, Users users) {
+    public void deleteMemo(Long id, User user) {
             Memo memo;
             //유저의 권한이 admin과 같으면 모든 데이터 삭제 가능
-            if (users.getRole().equals(UserRoleEnum.ADMIN)) {
+            if (user.getRole().equals(UserRoleEnum.ADMIN)) {
                 memo = memoRepository.findById(id).orElseThrow(
                         () -> new RequestException(ErrorCode.게시글이_존재하지_않습니다_400)
                 );
             } else {
                 //유저의 권한이 admin이 아니면 아이디가 같은 유저만 삭제 가능
-                memo = memoRepository.findByIdAndUsername(id, users.getUsername()).orElseThrow(
+                memo = memoRepository.findByIdAndUsername(id, user.getUsername()).orElseThrow(
                         () -> new RequestException(ErrorCode.아이디가_일치하지_않습니다)
                 );
             }

@@ -1,5 +1,6 @@
 package com.sparta.hanghaememo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,17 +18,20 @@ public class CommentLike {
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "COMMENT_ID")
     private Comment comment;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "USER_ID")
-    private Users users;
+    private User user;
 
 
-    public CommentLike( Users users , Comment comment) {
-        this.users = users;
-        this.comment=comment;
+
+    public CommentLike(User user, Comment comment) {
+        this.user = user;
+        this.comment = comment;
     }
 }

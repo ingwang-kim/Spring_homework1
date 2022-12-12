@@ -10,6 +10,7 @@ public interface CommentLikeRepository extends JpaRepository<CommentLike, Long> 
 
 
     Optional<CommentLike> findByComment(Comment comment);
+    Optional<CommentLike> findByCommentAndUserId(Comment comment , Long userid);
+    void deleteByUserIdAndCommentId(Long userId,Long commentId);
 
-    void deleteByUsersIdAndCommentId(Long usersId,Long commentId);
 }

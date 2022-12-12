@@ -1,6 +1,6 @@
 package com.sparta.hanghaememo.security;
 
-import com.sparta.hanghaememo.entity.Users;
+import com.sparta.hanghaememo.entity.User;
 import com.sparta.hanghaememo.entity.UserRoleEnum;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,21 +11,21 @@ import java.util.Collection;
 
 public class UserDetailsImpl implements UserDetails {
 
-    private final Users users;
+    private final User user;
     private final String username;
 
-    public UserDetailsImpl(Users users, String username) {
-        this.users = users;
+    public UserDetailsImpl(User user, String username) {
+        this.user = user;
         this.username = username;
     }
 
-    public Users getUser() {
-        return users;
+    public User getUser() {
+        return user;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        UserRoleEnum role = users.getRole();
+        UserRoleEnum role = user.getRole();
         String authority = role.getAuthority();
 
         SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(authority);

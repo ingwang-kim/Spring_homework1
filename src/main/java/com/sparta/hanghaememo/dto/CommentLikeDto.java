@@ -9,8 +9,4 @@ import lombok.*;
 @AllArgsConstructor
 public class CommentLikeDto {
     private Long cId;
-
-    private String userName;
-
-
 }
