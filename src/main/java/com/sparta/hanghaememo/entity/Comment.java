@@ -1,6 +1,5 @@
 package com.sparta.hanghaememo.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.hanghaememo.dto.CommentDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,7 +25,6 @@ public class Comment extends Timestamped {
 
     @ManyToOne(fetch = FetchType.LAZY)//로딩
     @JoinColumn(name = "MEMO_ID")
-    @JsonIgnore
     private Memo memo;
 
     @Column(nullable = false)

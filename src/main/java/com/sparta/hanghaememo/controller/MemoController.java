@@ -3,7 +3,6 @@ package com.sparta.hanghaememo.controller;
 import com.sparta.hanghaememo.dto.MemoRequestDto;
 import com.sparta.hanghaememo.dto.MemoResponseDto;
 import com.sparta.hanghaememo.dto.ResponseMsgDto;
-import com.sparta.hanghaememo.dto.UpdateResponseDto;
 import com.sparta.hanghaememo.security.UserDetailsImpl;
 import com.sparta.hanghaememo.service.MemoService;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +40,7 @@ public class MemoController {
 
     //아이디가 일치하는 데이터 업데이트
     @PutMapping("/api/update/{id}")
-    public UpdateResponseDto updateMemo(@PathVariable Long id, @RequestBody MemoRequestDto requestDto , @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public MemoResponseDto updateMemo(@PathVariable Long id, @RequestBody MemoRequestDto requestDto , @AuthenticationPrincipal UserDetailsImpl userDetails){
         return memoService.update(id,requestDto,userDetails.getUser());
     }
 

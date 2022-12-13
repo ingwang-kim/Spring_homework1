@@ -1,11 +1,12 @@
 package com.sparta.hanghaememo.service;
 
+import com.sparta.hanghaememo.dto.CommentDto;
 import com.sparta.hanghaememo.dto.MemoRequestDto;
 import com.sparta.hanghaememo.dto.MemoResponseDto;
-import com.sparta.hanghaememo.dto.UpdateResponseDto;
+import com.sparta.hanghaememo.entity.Comment;
 import com.sparta.hanghaememo.entity.Memo;
-import com.sparta.hanghaememo.entity.UserRoleEnum;
 import com.sparta.hanghaememo.entity.User;
+import com.sparta.hanghaememo.entity.UserRoleEnum;
 import com.sparta.hanghaememo.repository.MemoRepository;
 import com.sparta.hanghaememo.util.exception.ErrorCode;
 import com.sparta.hanghaememo.util.exception.RequestException;
@@ -26,10 +27,15 @@ public class MemoService {
 
     //데이터 생성
     @Transactional
-    public MemoResponseDto createMemo(MemoRequestDto requestDto , User user) {
+    public MemoResponseDto createMemo(MemoRequestDto requestDto, User user) {
 
-            Memo memo = memoRepository.save(new Memo(requestDto, user));
-            return new MemoResponseDto(memo);
+
+        Memo memo = memoRepository.save(new Memo(requestDto, user));
+        List<CommentDto> commentDtoList = new ArrayList<>();
+        for (Comment comment : memo.getCommentList()) {
+            commentDtoList.add(new CommentDto(comment));
+        }
+        return new MemoResponseDto(memo, commentDtoList);
     }
 
 
@@ -39,7 +45,11 @@ public class MemoService {
         List<MemoResponseDto> memoResponseDto = new ArrayList<>();
 
         for(Memo memo : memoList){
-            MemoResponseDto memoDto = new MemoResponseDto(memo);
+            List<CommentDto> commentDtoList = new ArrayList<>();
+            for(Comment comment : memo.getCommentList()){
+                commentDtoList.add(new CommentDto(comment));
+            }
+            MemoResponseDto memoDto = new MemoResponseDto(memo,commentDtoList);
             memoResponseDto.add(memoDto);
         }
         return memoResponseDto;
@@ -49,32 +59,43 @@ public class MemoService {
     @Transactional
     public MemoResponseDto openMemo(Long id) {
 
-            Memo memo = memoRepository.findById(id).orElseThrow(
-                    () -> new RequestException(ErrorCode.게시글이_존재하지_않습니다_400)
-            );
+        Memo memo = memoRepository.findById(id).orElseThrow(
+                () -> new RequestException(ErrorCode.게시글이_존재하지_않습니다_400)
+        );
 
-            return new MemoResponseDto(memo);
+        List<CommentDto> commentDtoList = new ArrayList<>();
+        for (Comment comment : memo.getCommentList()) {
+            commentDtoList.add(new CommentDto(comment));
+        }
+
+        return new MemoResponseDto(memo, commentDtoList);
     }
 
 
     //update
     @Transactional
-    public UpdateResponseDto update(Long id, MemoRequestDto requestDto, User user) {
-            Memo memo;
-            //유저의 권한이 admin과 같으면 모든 데이터 수정 가능
-            if(user.getRole().equals(UserRoleEnum.ADMIN)){
-                memo = memoRepository.findById(id).orElseThrow(
-                        () -> new RequestException(ErrorCode.게시글이_존재하지_않습니다_400)
-                );
-            }else {
-                //유저의 권한이 admin이 아니면 아이디가 같은 유저만 수정 가능
-                memo = memoRepository.findByIdAndUsername(id, user.getUsername()).orElseThrow(
-                        () -> new RequestException(ErrorCode.아이디가_일치하지_않습니다)
-                );
-            }
-            memo.update(requestDto);
+    public MemoResponseDto update(Long id, MemoRequestDto requestDto, User user) {
+        Memo memo;
+        //유저의 권한이 admin과 같으면 모든 데이터 수정 가능
+        if (user.getRole().equals(UserRoleEnum.ADMIN)) {
+            memo = memoRepository.findById(id).orElseThrow(
+                    () -> new RequestException(ErrorCode.게시글이_존재하지_않습니다_400)
+            );
+        } else {
+            //유저의 권한이 admin이 아니면 아이디가 같은 유저만 수정 가능
+            memo = memoRepository.findByIdAndUsername(id, user.getUsername()).orElseThrow(
+                    () -> new RequestException(ErrorCode.아이디가_일치하지_않습니다)
+            );
+        }
 
-            return new UpdateResponseDto(memo);
+        List<CommentDto> commentDtoList = new ArrayList<>();
+        for (Comment comment : memo.getCommentList()) {
+            commentDtoList.add(new CommentDto(comment));
+        }
+
+        memo.update(requestDto);
+
+        return new MemoResponseDto(memo,commentDtoList);
     }
 
     //delete

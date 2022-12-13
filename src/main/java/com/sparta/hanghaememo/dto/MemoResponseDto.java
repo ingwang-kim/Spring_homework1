@@ -1,6 +1,5 @@
 package com.sparta.hanghaememo.dto;
 
-import com.sparta.hanghaememo.entity.Comment;
 import com.sparta.hanghaememo.entity.Memo;
 import lombok.Getter;
 
@@ -15,21 +14,23 @@ public class MemoResponseDto{
     private Long id;
     private int MemoLikeCount;
 
-    private List<Comment> commentList = new ArrayList<>();
-    /*private List<CommentDto> commentDtoList = new ArrayList<>();*/
-
-    /*for(Comment comment )*/
+    /*private List<Comment> commentList = new ArrayList<>();*/
+    private List<CommentDto> commentDtoList = new ArrayList<>();
 
 
 
 
-    public MemoResponseDto(Memo memo) {
+
+
+    public MemoResponseDto(Memo memo, List<CommentDto> commentDtoList) {
         this.id = memo.getId();
         this.username = memo.getUsername();
         this.contents = memo.getContents();
         this.title = memo.getTitle();
         this.MemoLikeCount = memo.getMemoLikes().size();
-        this.commentList = memo.getCommentList();
+        this.commentDtoList = commentDtoList;
 
     }
+
+
 }

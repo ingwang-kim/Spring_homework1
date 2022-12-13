@@ -27,13 +27,13 @@ public class CommentLikeService {
         if(commentLikeRepository.findByCommentAndUserId(comment,user.getId()).isEmpty()){
             CommentLike commentLike = commentLikeRepository.save(new CommentLike(user,comment));
             comment.getCommentLikes().add(commentLike);
-            /*comment.setCommentLikeCount(comment.getCommentLikeCount()+1);*/
+
+            comment.setCommentLikeCount(comment.getCommentLikeCount()+1);
 
             return new ResponseMsgDto(HttpStatus.OK.value(),"좋아요 성공");
         }else{
             commentLikeRepository.deleteByUserIdAndCommentId(user.getId(), comment.getId());
-            /*comment.setCommentLikeCount(-1);*/
-            /*comment.update(count);*/
+            comment.setCommentLikeCount(comment.getCommentLikeCount()+1);
             return new ResponseMsgDto(HttpStatus.OK.value(),"좋아요 취소");
         }
     }
