@@ -1,16 +1,15 @@
 package com.sparta.hanghaememo.service;
 
 import com.sparta.hanghaememo.dto.CommentDto;
-import com.sparta.hanghaememo.entity.Comment;
-import com.sparta.hanghaememo.entity.Memo;
-import com.sparta.hanghaememo.entity.UserRoleEnum;
-import com.sparta.hanghaememo.entity.User;
+import com.sparta.hanghaememo.dto.ResponseMsgDto;
+import com.sparta.hanghaememo.entity.*;
 import com.sparta.hanghaememo.repository.CommentLikeRepository;
 import com.sparta.hanghaememo.repository.CommentRepository;
 import com.sparta.hanghaememo.repository.MemoRepository;
 import com.sparta.hanghaememo.util.exception.ErrorCode;
 import com.sparta.hanghaememo.util.exception.RequestException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,7 +56,7 @@ public class CommentService{
                 );
             }
             comment.update(commentDto);
-            return new CommentDto(comment);
+            return new CommentDto(comment,commentLikeRepository.countAllByCommentId(comment.getId()));
 
     }
 
@@ -77,6 +76,24 @@ public class CommentService{
 
             commentRepository.delete(comment);
         }
+    //메모 좋아요 서비스
+    public ResponseMsgDto CommentLikeCD(Long id, User user) {
+
+        Comment comment = commentRepository.findById(id).orElseThrow();
+
+        if(commentLikeRepository.findByCommentAndUserId(comment,user.getId()).isEmpty()){
+            CommentLike commentLike = commentLikeRepository.save(new CommentLike(user,comment));
+            comment.getCommentLikes().add(commentLike);
+
+            /*comment.setCommentLikeCount(comment.getCommentLikeCount()+1);*/
+
+            return new ResponseMsgDto(HttpStatus.OK.value(),"좋아요 성공");
+        }else{
+            commentLikeRepository.deleteByUserIdAndCommentId(user.getId(), comment.getId());
+            /*comment.setCommentLikeCount(comment.getCommentLikeCount()+1);*/
+            return new ResponseMsgDto(HttpStatus.OK.value(),"좋아요 취소");
+        }
+    }
 
 }
 

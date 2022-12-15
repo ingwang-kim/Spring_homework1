@@ -3,14 +3,15 @@ package com.sparta.hanghaememo.service;
 import com.sparta.hanghaememo.dto.CommentDto;
 import com.sparta.hanghaememo.dto.MemoRequestDto;
 import com.sparta.hanghaememo.dto.MemoResponseDto;
-import com.sparta.hanghaememo.entity.Comment;
-import com.sparta.hanghaememo.entity.Memo;
-import com.sparta.hanghaememo.entity.User;
-import com.sparta.hanghaememo.entity.UserRoleEnum;
+import com.sparta.hanghaememo.dto.ResponseMsgDto;
+import com.sparta.hanghaememo.entity.*;
+import com.sparta.hanghaememo.repository.CommentLikeRepository;
+import com.sparta.hanghaememo.repository.MemoLikeRepository;
 import com.sparta.hanghaememo.repository.MemoRepository;
 import com.sparta.hanghaememo.util.exception.ErrorCode;
 import com.sparta.hanghaememo.util.exception.RequestException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemoService {
     private final MemoRepository memoRepository;
+    private final CommentLikeRepository commentLikeRepository;
+
+    private final MemoLikeRepository memoLikeRepository;
 
 
 
@@ -47,7 +51,7 @@ public class MemoService {
         for(Memo memo : memoList){
             List<CommentDto> commentDtoList = new ArrayList<>();
             for(Comment comment : memo.getCommentList()){
-                commentDtoList.add(new CommentDto(comment));
+                commentDtoList.add(new CommentDto(comment,commentLikeRepository.countAllByCommentId(comment.getId())));
             }
             MemoResponseDto memoDto = new MemoResponseDto(memo,commentDtoList);
             memoResponseDto.add(memoDto);
@@ -62,12 +66,10 @@ public class MemoService {
         Memo memo = memoRepository.findById(id).orElseThrow(
                 () -> new RequestException(ErrorCode.게시글이_존재하지_않습니다_400)
         );
-
         List<CommentDto> commentDtoList = new ArrayList<>();
         for (Comment comment : memo.getCommentList()) {
-            commentDtoList.add(new CommentDto(comment));
+            commentDtoList.add(new CommentDto(comment,commentLikeRepository.countAllByCommentId(comment.getId())));
         }
-
         return new MemoResponseDto(memo, commentDtoList);
     }
 
@@ -114,6 +116,20 @@ public class MemoService {
                 );
             }
             memoRepository.delete(memo);
+    }
+    @Transactional
+    public ResponseMsgDto MemoLikeCD(Long id, User user) {
+
+        Memo memo = memoRepository.findById(id).orElseThrow();
+
+
+        if (memoLikeRepository.findByMemoAndUserId(memo,user.getId()).isEmpty()) {
+            memoLikeRepository.save(new MemoLike(user, memo));
+            return new ResponseMsgDto(HttpStatus.OK.value(), "좋아요 성공");
+        } else {
+            memoLikeRepository.deleteByUserIdAndMemoId(user.getId(), memo.getId());
+            return new ResponseMsgDto(HttpStatus.OK.value(), "좋아요 취소");
+        }
     }
 
 

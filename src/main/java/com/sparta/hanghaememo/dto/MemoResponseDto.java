@@ -14,7 +14,6 @@ public class MemoResponseDto{
     private Long id;
     private int MemoLikeCount;
 
-    /*private List<Comment> commentList = new ArrayList<>();*/
     private List<CommentDto> commentDtoList = new ArrayList<>();
 
 

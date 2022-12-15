@@ -37,7 +37,7 @@ public class Comment extends Timestamped {
     private int commentLikeCount;
 
 
-    @OneToMany(mappedBy = "comment")
+    @OneToMany(mappedBy = "comment",cascade = CascadeType.REMOVE)
     private List<CommentLike> commentLikes = new ArrayList<>();
 
 
@@ -54,9 +54,9 @@ public class Comment extends Timestamped {
 
     }
 
-    public void setCommentLikeCount(int num){
+    /*public void setCommentLikeCount(int num){
         this.commentLikeCount = num;
-    }
+    }*/
 
 
 }

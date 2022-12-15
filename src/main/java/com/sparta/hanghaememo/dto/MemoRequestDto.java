@@ -1,17 +1,15 @@
 package com.sparta.hanghaememo.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class MemoRequestDto {
-    private String username;
+
     private String contents;
-    private String pw;
     private String title;
-    private String role;
-    private Long id;
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
+    private String username;
 }

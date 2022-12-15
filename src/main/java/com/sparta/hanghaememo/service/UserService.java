@@ -1,7 +1,7 @@
 package com.sparta.hanghaememo.service;
 
-import com.sparta.hanghaememo.dto.LoginRequestDto;
 import com.sparta.hanghaememo.dto.SignupRequestDto;
+import com.sparta.hanghaememo.dto.UserInfoRequestDto;
 import com.sparta.hanghaememo.entity.User;
 import com.sparta.hanghaememo.entity.UserRoleEnum;
 import com.sparta.hanghaememo.jwt.JwtUtil;
@@ -59,9 +59,9 @@ public class UserService {
 
     //로그인
     @Transactional(readOnly = true)
-    public void login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
-        String username = loginRequestDto.getUsername();
-        String pw = loginRequestDto.getPw();
+    public void login(UserInfoRequestDto userInfoRequestDto, HttpServletResponse response) {
+        String username = userInfoRequestDto.getUsername();
+        String pw = userInfoRequestDto.getPw();
 
         // 사용자 확인
         User user = userRepository.findByUsername(username).orElseThrow(
@@ -70,10 +70,27 @@ public class UserService {
         );
         // 비밀번호 확인
         if(!passwordEncoder.matches(pw, user.getPw())){
-            throw  new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw  new RequestException(ErrorCode.비밀번호가_일치하지_않습니다_400);
         }
 
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getUsername(), user.getRole()));
-        //add header로 헤더에 값 넣어주기 (키, 토큰)
+        //addHeader로 헤더에 값 넣어주기 (키, 토큰)
+    }
+
+    @Transactional
+    public void signDown(UserInfoRequestDto userInfoRequestDto, User user){
+
+            if (userRepository.findByUsername(userInfoRequestDto.getUsername()).isEmpty()) {
+                throw new RequestException(ErrorCode.사용자가_존재하지_않습니다_400);
+            }else {
+                if(!passwordEncoder.matches(userInfoRequestDto.getPw(), user.getPw())){
+                    throw new RequestException(ErrorCode.비밀번호가_일치하지_않습니다_400);
+                }
+                else {
+                    userRepository.deleteByUsername(userInfoRequestDto.getUsername());
+                }
+            }
+
+
     }
 }

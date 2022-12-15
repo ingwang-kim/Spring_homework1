@@ -1,11 +1,7 @@
 package com.sparta.hanghaememo.dto;
 
 import com.sparta.hanghaememo.entity.Comment;
-import com.sparta.hanghaememo.entity.CommentLike;
 import lombok.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
@@ -17,18 +13,24 @@ public class CommentDto {
     private Long id;
     private Long mId; //메모 아이디
     private String username;
+
     private String comment;
     private int commentLikeCount;
-
-    private List<CommentLike> commentList = new ArrayList<>();
 
     public CommentDto(Comment comment){
 
         this.id= comment.getId();
         this.mId = comment.getMemo().getId();
         this.username = comment.getUsername();
-        this.commentList = comment.getCommentLikes();
-        this.commentLikeCount = comment.getCommentLikes().size();
 
     }
+    public CommentDto(Comment comment, int commentLike){
+
+        this.id= comment.getId();
+        this.mId = comment.getMemo().getId();
+        this.username = comment.getUsername();
+        this.commentLikeCount = commentLike;
+
+    }
+
 }

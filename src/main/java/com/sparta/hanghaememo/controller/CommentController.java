@@ -30,4 +30,10 @@ public class CommentController {
         return new ResponseMsgDto(HttpStatus.OK.value(), "댓글 삭제 성공");
 
     }
+    //댓글 좋아요 기능
+    @PostMapping("/api/Like/Comment/{id}")
+    public ResponseMsgDto CommentLikeCD(@PathVariable Long id,@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return commentService.CommentLikeCD(id,userDetails.getUser());
+
+    }
 }

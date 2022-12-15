@@ -1,7 +1,9 @@
 package com.sparta.hanghaememo.entity;
+
 import com.sparta.hanghaememo.dto.MemoRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +31,11 @@ public class Memo extends Timestamped {
     @Column(nullable = false)
     private String title;
 
-    @OneToMany(mappedBy = "memo") //테이블 이름으로 mappedBy
+    @OneToMany(mappedBy = "memo",cascade = CascadeType.REMOVE) //테이블 이름으로 mappedBy
     @OrderBy("createdAt desc")
     private List<Comment> commentList= new ArrayList<>();
 
-    @OneToMany(mappedBy = "memo")
+    @OneToMany(mappedBy = "memo",cascade = CascadeType.REMOVE)
     private List<MemoLike> memoLikes=new ArrayList<>();
 
 

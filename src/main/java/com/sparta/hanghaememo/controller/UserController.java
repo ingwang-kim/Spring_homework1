@@ -1,17 +1,16 @@
 package com.sparta.hanghaememo.controller;
 
-import com.sparta.hanghaememo.dto.LoginRequestDto;
 import com.sparta.hanghaememo.dto.ResponseMsgDto;
 import com.sparta.hanghaememo.dto.SignupRequestDto;
+import com.sparta.hanghaememo.dto.UserInfoRequestDto;
+import com.sparta.hanghaememo.security.UserDetailsImpl;
 import com.sparta.hanghaememo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -39,9 +38,16 @@ public class UserController {
 
     @ResponseBody
     @PostMapping("/login")
-    public ResponseEntity<ResponseMsgDto> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {//클라이언트에 반환하기 위해 response객체
-        userService.login(loginRequestDto, response);
+    public ResponseEntity<ResponseMsgDto> login(@RequestBody UserInfoRequestDto userInfoRequestDto, HttpServletResponse response) {//클라이언트에 반환하기 위해 response객체
+        userService.login(userInfoRequestDto, response);
 
         return ResponseEntity.ok(new ResponseMsgDto(HttpStatus.OK.value(),"로그인 성공"));
+    }
+
+    @ResponseBody
+    @DeleteMapping("/signDown")
+    public ResponseMsgDto signDown(@RequestBody UserInfoRequestDto userInfoRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        userService.signDown(userInfoRequestDto,userDetails.getUser());
+        return new ResponseMsgDto(HttpStatus.OK.value(),"회원 탈퇴 완료");
     }
 }

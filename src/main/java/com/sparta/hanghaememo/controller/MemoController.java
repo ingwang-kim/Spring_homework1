@@ -50,5 +50,11 @@ public class MemoController {
         memoService.deleteMemo(id,userDetails.getUser());
         return new ResponseMsgDto(HttpStatus.OK.value(), "삭제 완료");
     }
+    //게시글 좋아요 기능
+    @PostMapping("/api/Like/Memo/{id}")
+    public ResponseMsgDto MemoLikeCD(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return memoService.MemoLikeCD(id, userDetails.getUser());
+    }
+
 
 }
