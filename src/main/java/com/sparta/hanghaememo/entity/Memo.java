@@ -31,6 +31,9 @@ public class Memo extends Timestamped {
     @Column(nullable = false)
     private String title;
 
+    @Column
+    private String category;
+
     @OneToMany(mappedBy = "memo",cascade = CascadeType.REMOVE) //테이블 이름으로 mappedBy
     @OrderBy("createdAt desc")
     private List<Comment> commentList= new ArrayList<>();
@@ -40,11 +43,12 @@ public class Memo extends Timestamped {
 
 
 
-    public Memo(MemoRequestDto requestDto , User user) {
+    public Memo(MemoRequestDto memoRequestDto , User user) {
 
         this.username = user.getUsername();
-        this.contents = requestDto.getContents();
-        this.title = requestDto.getTitle();
+        this.contents = memoRequestDto.getContents();
+        this.title = memoRequestDto.getTitle();
+        this.category=memoRequestDto.getCategory();
         this.user = user;
 
     }
@@ -53,6 +57,7 @@ public class Memo extends Timestamped {
         this.title = memoRequestDto.getTitle();
         this.username = memoRequestDto.getUsername();
         this.contents = memoRequestDto.getContents();
+        this.category= memoRequestDto.getCategory();
 
     }
 

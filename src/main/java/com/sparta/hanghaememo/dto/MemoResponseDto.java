@@ -13,6 +13,7 @@ public class MemoResponseDto{
     private String title;
     private Long id;
     private int MemoLikeCount;
+    private String category;
 
     private List<CommentDto> commentDtoList = new ArrayList<>();
 
@@ -26,6 +27,7 @@ public class MemoResponseDto{
         this.username = memo.getUsername();
         this.contents = memo.getContents();
         this.title = memo.getTitle();
+        this.category=  memo.getCategory();
         this.MemoLikeCount = memo.getMemoLikes().size();
         this.commentDtoList = commentDtoList;
 

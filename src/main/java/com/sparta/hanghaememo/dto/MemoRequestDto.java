@@ -12,4 +12,5 @@ public class MemoRequestDto {
     private String contents;
     private String title;
     private String username;
+    private String category;
 }

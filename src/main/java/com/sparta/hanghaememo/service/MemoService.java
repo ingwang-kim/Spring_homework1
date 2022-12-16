@@ -1,9 +1,6 @@
 package com.sparta.hanghaememo.service;
 
-import com.sparta.hanghaememo.dto.CommentDto;
-import com.sparta.hanghaememo.dto.MemoRequestDto;
-import com.sparta.hanghaememo.dto.MemoResponseDto;
-import com.sparta.hanghaememo.dto.ResponseMsgDto;
+import com.sparta.hanghaememo.dto.*;
 import com.sparta.hanghaememo.entity.*;
 import com.sparta.hanghaememo.repository.CommentLikeRepository;
 import com.sparta.hanghaememo.repository.MemoLikeRepository;
@@ -59,6 +56,24 @@ public class MemoService {
         return memoResponseDto;
     }
 
+    @Transactional
+    public List<MemoResponseDto> categoryGetMemos(String category){
+        List<Memo> memoList = memoRepository.findAllByCategory(category);
+        List<MemoResponseDto> memoResponseDto = new ArrayList<>();
+
+        for(Memo memo : memoList){
+            List<CommentDto> commentDtoList = new ArrayList<>();
+            for(Comment comment : memo.getCommentList()){
+                commentDtoList.add(new CommentDto(comment,commentLikeRepository.countAllByCommentId(comment.getId())));
+            }
+            MemoResponseDto memoDto = new MemoResponseDto(memo,commentDtoList);
+            memoResponseDto.add(memoDto);
+        }
+        return memoResponseDto;
+    }
+
+
+
     //아이디 리스트 중 하나 출력
     @Transactional
     public MemoResponseDto openMemo(Long id) {
@@ -72,7 +87,6 @@ public class MemoService {
         }
         return new MemoResponseDto(memo, commentDtoList);
     }
-
 
     //update
     @Transactional

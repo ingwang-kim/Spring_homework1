@@ -22,6 +22,7 @@ public class CommentDto {
         this.id= comment.getId();
         this.mId = comment.getMemo().getId();
         this.username = comment.getUsername();
+        this.comment = comment.getComment();
 
     }
     public CommentDto(Comment comment, int commentLike){
@@ -29,6 +30,7 @@ public class CommentDto {
         this.id= comment.getId();
         this.mId = comment.getMemo().getId();
         this.username = comment.getUsername();
+        this.comment = comment.getComment();
         this.commentLikeCount = commentLike;
 
     }

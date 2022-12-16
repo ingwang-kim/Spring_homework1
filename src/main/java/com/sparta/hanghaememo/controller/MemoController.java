@@ -35,7 +35,10 @@ public class MemoController {
     @GetMapping("/api/open/{id}")
     public MemoResponseDto openMemo(@PathVariable Long id){
         return memoService.openMemo(id);
-
+    }
+    @GetMapping("api/memo/{category}")
+    public List<MemoResponseDto> categoryGetMemos(@PathVariable String category){
+        return memoService.categoryGetMemos(category);
     }
 
     //아이디가 일치하는 데이터 업데이트
